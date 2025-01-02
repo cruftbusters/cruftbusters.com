@@ -10,13 +10,23 @@ export function BookkeepingV3() {
     <MarginAround>
       <h2>Bookkeeping v3</h2>
       <p>Welcome to v3</p>
+      <p>
+        <button>switch to text sheet</button>
+      </p>
       <Editor journal={journal} />
+      <EditorText journal={journal} />
       <Summary journal={journal} />
     </MarginAround>
   )
 }
 
-type Transfer = { credit: string; debit: string; amount: string }
+type Transfer = {
+  date: string
+  memo: string
+  credit: string
+  debit: string
+  amount: string
+}
 
 function useJournal() {
   const [transfers, setTransfers] = useState<Transfer[]>([])
@@ -35,7 +45,9 @@ class Journal {
 
   addTransfer() {
     this.setTransfers((transfers) =>
-      transfers.concat([{ credit: '', debit: '', amount: '' }]),
+      transfers.concat([
+        { date: '', memo: '', credit: '', debit: '', amount: '' },
+      ]),
     )
   }
 
@@ -89,8 +101,26 @@ function Editor({ journal }: { journal: ReturnType<typeof useJournal> }) {
                 gridTemplateColumns: 'subgrid',
               }}
             >
-              <input aria-label={'date'} />
-              <input aria-label={'memo'} />
+              <input
+                aria-label={'date'}
+                onChange={(e) =>
+                  journal.updateTransfer(index, (transfer) => ({
+                    ...transfer,
+                    date: e.target.value,
+                  }))
+                }
+                value={transfer.date}
+              />
+              <input
+                aria-label={'memo'}
+                onChange={(e) =>
+                  journal.updateTransfer(index, (transfer) => ({
+                    ...transfer,
+                    memo: e.target.value,
+                  }))
+                }
+                value={transfer.memo}
+              />
               <input
                 aria-label={'credit'}
                 onChange={(e) =>
@@ -129,6 +159,31 @@ function Editor({ journal }: { journal: ReturnType<typeof useJournal> }) {
         <button onClick={() => journal.addTransfer()}>add transfer</button>
       </p>
     </>
+  )
+}
+
+function EditorText({ journal }: { journal: ReturnType<typeof useJournal> }) {
+  const text = useMemo(
+    () =>
+      'date,memo,credit,debit,amount\n' +
+      journal.transfers
+        .map((transfer) =>
+          [
+            transfer.date,
+            transfer.memo,
+            transfer.credit,
+            transfer.debit,
+            transfer.amount,
+          ].join(','),
+        )
+        .join('\n'),
+    [journal.transfers],
+  )
+  return (
+    <label>
+      {' text sheet '}
+      <textarea onChange={() => {}} value={text} />
+    </label>
   )
 }
 
