@@ -1,4 +1,4 @@
-import { SetStateAction, useMemo, useState } from 'react'
+import { SetStateAction, useEffect, useMemo, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import Dexie, { EntityTable } from 'dexie'
 
@@ -91,13 +91,12 @@ function JournalView({ journalKey }: { journalKey?: string }) {
   const journal = useLiveQuery(async () => {
     if (journalKey !== undefined) {
       try {
-        status.info('loading journal')
         const result = await database.journals.get(journalKey)
         if (result === undefined) {
           status.info('ready to load journal')
         } else {
-          status.info('loaded journal')
-          return new Journal(journalKey, result.transfers || [])
+          status.clear()
+          return new Journal(journalKey, result.transfers)
         }
       } catch (cause) {
         status.error('failed to load journal', cause)
@@ -125,7 +124,7 @@ class Journal {
     private table = database.journals,
   ) {}
 
-  private setTransfers(updateOrBlock: SetStateAction<Transfer[]>) {
+  setTransfers(updateOrBlock: SetStateAction<Transfer[]>) {
     const update =
       typeof updateOrBlock === 'function'
         ? updateOrBlock(this.transfers)
@@ -173,8 +172,29 @@ database.version(1).stores({
 })
 
 function JournalEditor({ journal }: { journal: Journal }) {
+  const journalText = useMemo(
+    () => TransferSerde.serialize(journal.transfers),
+    [journal.transfers],
+  )
+
+  const [journalTextInFlight, setJournalTextInFlight] = useState<string>()
+  const status = useStatus()
+
+  function onTextChanged(text: string) {
+    try {
+      const transfers = TransferSerde.deserialize(text)
+      journal.setTransfers(transfers)
+      setJournalTextInFlight(undefined)
+      status.clear()
+    } catch (cause) {
+      setJournalTextInFlight(text)
+      status.error('failed to deserialize transfers', cause)
+    }
+  }
+
   return (
     <>
+      <p>{status.message}</p>
       <div
         className={'grid'}
         style={{
@@ -277,12 +297,82 @@ function JournalEditor({ journal }: { journal: Journal }) {
             </button>
           </div>
         ))}
+        <textarea
+          aria-label={'journal as text'}
+          onChange={(e) => onTextChanged(e.target.value)}
+          style={{ gridColumn: '1/-1', resize: 'vertical' }}
+          value={journalText || journalTextInFlight}
+        />
       </div>
       <p>
         <button onClick={() => journal.addTransfer()}>add transfer</button>
       </p>
     </>
   )
+}
+
+class TransferSerde {
+  static serialize(
+    transfers: Transfer[],
+    fields = ['date', 'memo', 'credit', 'debit', 'amount'],
+  ) {
+    const records = transfers.map((transfer) => {
+      const record = []
+      let index = 0
+      for (const [key, value] of Object.entries(transfer)) {
+        if (key !== fields[index]) {
+          throw Error(`expected '${fields[index]}' got '${key}'`)
+        }
+        record.push(value)
+        index++
+      }
+      return record
+    })
+
+    return [fields]
+      .concat(records)
+      .map((row) => row.join('\t'))
+      .join('\n')
+  }
+
+  static deserialize(
+    text: string,
+    expectedFields = ['date', 'memo', 'credit', 'debit', 'amount'],
+  ) {
+    const rows = text.split('\n').map((line) => line.split('\t'))
+    const fields = rows.shift() || []
+
+    if (fields.length === 1 && fields[0] === '') {
+      return []
+    }
+
+    {
+      if (fields.length !== expectedFields.length) {
+        throw Error(`expected fields '${expectedFields}' got '${fields}'`)
+      }
+
+      for (let index = 0; index < fields.length; index++) {
+        if (fields[index] !== expectedFields[index]) {
+          throw Error(
+            `at position ${index} expected '${expectedFields[index]}' got '${fields[index]}'`,
+          )
+        }
+      }
+    }
+
+    const result: Transfer[] = []
+
+    for (const row of rows) {
+      const transfer: Record<string, string> = {}
+      let index = 0
+      for (const field of fields) {
+        transfer[field] = row[index++]
+      }
+      result.push(transfer as Transfer)
+    }
+
+    return result
+  }
 }
 
 function JournalSummary({ journal }: { journal: Journal }) {
@@ -315,8 +405,8 @@ function JournalSummary({ journal }: { journal: Journal }) {
       <div>
         {Array.from(summary.entries()).map(([account, amount]) => (
           <div key={account}>
-            {` ${account} `}
-            <span>{` ${amount.format()} `}</span>
+            {` ${account}: `}
+            <span aria-label={account}>{` ${amount.format()} `}</span>
           </div>
         ))}
       </div>

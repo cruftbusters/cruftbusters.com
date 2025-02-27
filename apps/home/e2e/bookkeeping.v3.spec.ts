@@ -83,3 +83,52 @@ test('create update delete transfer and summary', async ({ page }) => {
   )
   expect(page.getByText('asset:checking account')).toContainText(' $ 1,000.00 ')
 })
+
+test('paste transfers as text', async ({ page }) => {
+  await page.goto('http://localhost:5173/bookkeeping')
+  const createJournalButton = page.getByRole('button', {
+    name: 'create journal',
+  })
+
+  await createJournalButton.click()
+  await page
+    .getByLabel('journal as text')
+    .fill(
+      [
+        ['date', 'memo', 'credit', 'debit', 'amount'],
+        [
+          '2025-01-01',
+          'first transfer of the year!!!',
+          'equity:capital contribution',
+          'expense:insurance',
+          ' $ 300.00 ',
+        ],
+        [
+          '2025-01-02',
+          '',
+          'income:via client',
+          'liability:client receivable',
+          ' $ 1,000.00 ',
+        ],
+        [
+          '2025-01-03',
+          '',
+          'liability:client receivable',
+          'asset:checking account',
+          ' $ 1,000.00 ',
+        ],
+      ]
+        .map((row) => row.join('\t'))
+        .join('\n'),
+    )
+
+  expect(page.getByLabel('equity:capital contribution')).toContainText(
+    ' ( $ 300.00 ) ',
+  )
+  expect(page.getByLabel('expense:insurance')).toContainText(' $ 300.00 ')
+  expect(page.getByLabel('income:via client')).toContainText(' ( $ 1,000.00 ) ')
+  expect(page.getByLabel('liability:client receivable')).toContainText(
+    ' $ 0.00 ',
+  )
+  expect(page.getByLabel('asset:checking account')).toContainText(' $ 1,000.00 ')
+})

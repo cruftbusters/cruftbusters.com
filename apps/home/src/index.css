@@ -68,7 +68,7 @@ button:focus-visible {
   }
 }
 
-.grid input {
+.grid input,textarea {
   border: none;
   outline: none;
 }
