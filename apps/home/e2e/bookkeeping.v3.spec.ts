@@ -81,9 +81,7 @@ test('create update delete transfer and summary', async ({ page }) => {
   expect(summary.getByLabel('income:via client')).toContainText(
     ' ( $ 1,000.00 ) ',
   )
-  expect(summary.getByLabel('liability:client receivable')).toContainText(
-    ' $ 0.00 ',
-  )
+  expect(summary.getByLabel('liability:client receivable')).not.toBeVisible()
   expect(summary.getByLabel('asset:checking account')).toContainText(
     ' $ 1,000.00 ',
   )
