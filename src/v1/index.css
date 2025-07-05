@@ -1,0 +1,43 @@
+a {
+  font-weight: 500;
+  color: pink;
+  text-decoration: inherit;
+}
+a:hover {
+  color: gray;
+}
+
+.grid-cell {
+  background-color: rgb(43, 42, 51);
+}
+
+.alternating > :nth-child(even) {
+  background-color: #333333;
+}
+
+.alternating > :nth-child(odd) {
+  background-color: #242424;
+}
+
+@media (prefers-color-scheme: light) {
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+  .grid-cell {
+    background-color: #f9f9f9;
+  }
+  .alternating > :nth-child(even) {
+    background-color: #d8d8d8;
+  }
+  .alternating > :nth-child(odd) {
+    background-color: #ffffff;
+  }
+}
+
+.grid input {
+  border: none;
+  outline: none;
+}

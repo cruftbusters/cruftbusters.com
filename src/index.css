@@ -13,22 +13,27 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: pink;
-  text-decoration: inherit;
-}
-a:hover {
-  color: gray;
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
 }
 
 body {
-  margin: 0;
+  margin: 0 1em;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+h1,
+h2,
+p,
+.block {
+  margin: 8px 0;
 }
 
 button,
@@ -53,43 +58,4 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-.grid-cell {
-  background-color: rgb(43, 42, 51);
-}
-
-.alternating > :nth-child(even) {
-  background-color: #333333;
-}
-
-.alternating > :nth-child(odd) {
-  background-color: #242424;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-  .grid-cell {
-    background-color: #f9f9f9;
-  }
-  .alternating > :nth-child(even) {
-    background-color: #d8d8d8;
-  }
-  .alternating > :nth-child(odd) {
-    background-color: #ffffff;
-  }
-}
-
-.grid input {
-  border: none;
-  outline: none;
 }
