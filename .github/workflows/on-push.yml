@@ -14,7 +14,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
       - run: |
-          pnpm -F home install --frozen-lockfile
-          pnpm -F home build
-          pnpm -F home exec aws s3 sync dist s3://cruftbusters.com
+          pnpm install --frozen-lockfile
+          pnpm build
+          pnpm exec aws s3 sync dist s3://cruftbusters.com
           aws cloudfront create-invalidation --distribution-id E3P0VPLWYNJVFR --paths /
