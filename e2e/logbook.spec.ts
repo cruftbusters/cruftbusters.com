@@ -16,7 +16,7 @@ test('missing headers error', async ({ page }) => {
   await page.getByRole('button', { name: 'save' }).click()
 
   await expect(page.getByLabel('status')).toHaveText(
-    'error: transfer text sheet does not include all headers of "credit", "debit", and "amount"',
+    'error: transfer sheet does not include all headers of "credit", "debit", and "amount"',
   )
 })
 

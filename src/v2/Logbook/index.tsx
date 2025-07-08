@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { useStatus } from '../../useStatus'
 import { TextSheet } from './TextSheet'
-import { Amount } from './Amount'
 import { BalanceSheet } from './BalanceSheet'
+import { TransferSheet } from './TransferSheet'
 
 import './index.css'
 
 export function Logbook() {
   const [text, setText] = useState('')
-  const [summary, setSummary] = useState<BalanceSheet>(new BalanceSheet())
+  const [summary, setBalanceSheet] = useState<BalanceSheet>(new BalanceSheet())
   const status = useStatus()
 
   return (
@@ -34,27 +34,9 @@ export function Logbook() {
           try {
             const sheet = TextSheet.parse(text)
 
-            const [headers, records] = sheet.split()
+            const transferSheet = TransferSheet.fromTextSheet(sheet)
 
-            const wantHeaders = ['credit', 'debit', 'amount']
-
-            for (const wantHeader of wantHeaders) {
-              if (headers.indexOf(wantHeader) < 0) {
-                throw new Error(
-                  'transfer text sheet does not include all headers of \"credit\", \"debit\", and \"amount\"',
-                )
-              }
-            }
-
-            const summary = new BalanceSheet()
-
-            for (const [credit, debit, amountText] of records) {
-              const amount = Amount.parse(amountText)
-              summary.accrue(credit, amount.negate())
-              summary.accrue(debit, amount)
-            }
-
-            setSummary(summary)
+            setBalanceSheet(transferSheet.toBalanceSheet())
 
             status.info('success')
           } catch (cause) {
