@@ -4,6 +4,8 @@ import { TextSheet } from './TextSheet'
 import { Amount } from './Amount'
 import { BalanceSheet } from './BalanceSheet'
 
+import './index.css'
+
 export function Logbook() {
   const [text, setText] = useState('')
   const [summary, setSummary] = useState<BalanceSheet>(new BalanceSheet())
@@ -19,11 +21,15 @@ export function Logbook() {
         notebooks and rich ad-hoc reporting and monitoring for software
         telemetry.
       </p>
-      <label>
-        {' transfers '}
-        <textarea value={text} onChange={(e) => setText(e.target.value)} />
-      </label>
+      <textarea
+        aria-label="transfers"
+        onChange={(e) => setText(e.target.value)}
+        rows={8}
+        className="block editor"
+        value={text}
+      />
       <button
+        className="block"
         onClick={() => {
           try {
             const sheet = TextSheet.parse(text)
@@ -58,8 +64,12 @@ export function Logbook() {
       >
         save
       </button>
-      <div aria-label="status">{status.message}</div>
-      <pre aria-label="summary">{summary.toTextSheet().toText()}</pre>
+      <div aria-label="status" className="block">
+        {status.message}
+      </div>
+      <pre aria-label="summary" className="block">
+        {summary.toTextSheet().toText()}
+      </pre>
     </div>
   )
 }
