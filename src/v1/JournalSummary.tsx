@@ -1,5 +1,5 @@
 import { useMemo, Fragment } from 'react'
-import { useStatus } from './useStatus'
+import { useStatus } from '../useStatus'
 import { Journal } from './Journal'
 
 export function JournalSummary({ journal }: { journal: Journal }) {

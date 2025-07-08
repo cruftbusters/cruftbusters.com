@@ -6,7 +6,7 @@ import { useLedger } from './useLedger'
 import { Amount2, Transfer } from './types'
 import { useState } from 'react'
 import { parseAmount } from './parseAmount'
-import { useStatus } from '../useStatus'
+import { useStatus } from '../../useStatus'
 
 export function BookkeepingV2() {
   const ledger = useLedger()
@@ -72,7 +72,11 @@ export function BookkeepingV2() {
   )
 }
 
-function TransferEditorText({ ledger }: { ledger: ReturnType<typeof useLedger> }) {
+function TransferEditorText({
+  ledger,
+}: {
+  ledger: ReturnType<typeof useLedger>
+}) {
   return (
     <>
       <h3>Transfer Editor (Text)</h3>
@@ -91,7 +95,11 @@ function TransferEditorText({ ledger }: { ledger: ReturnType<typeof useLedger> }
   )
 }
 
-function TransferEditorGrid({ ledger }: { ledger: ReturnType<typeof useLedger> }) {
+function TransferEditorGrid({
+  ledger,
+}: {
+  ledger: ReturnType<typeof useLedger>
+}) {
   function updateTransfer(
     index: number,
     update: (value: Transfer) => Transfer,
