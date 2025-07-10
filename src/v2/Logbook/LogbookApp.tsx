@@ -5,11 +5,11 @@ import { TextSheet } from './TextSheet'
 import { TransferSheet } from './TransferSheet'
 
 export function LogbookApp() {
+  const status = useStatus()
+
   const [text, setText] = useState('')
 
   const [transferSheet, setTransferSheet] = useState(new TransferSheet())
-
-  const status = useStatus()
 
   const [balanceSheet, setBalanceSheet] = useState(new BalanceSheet())
 
@@ -17,8 +17,37 @@ export function LogbookApp() {
     setBalanceSheet(transferSheet.toBalanceSheet())
   }, [transferSheet])
 
+  function loadExample() {
+    const sheet = new TextSheet([
+      ['credit', 'debit', 'amount'],
+      ['equity:capital contribution', 'expense:office supplies', '200'],
+      ['income:via client', 'liability:income receivable', '500'],
+      ['liability:income receivable', 'assets:checking', '500'],
+      ['liability:credit card', 'expense:government fees', '135'],
+      ['income:checking interest', 'assets:checking', '1'],
+      ['income:via client', 'liability:income receivable', '500'],
+      ['assets:checking', 'expense:income tax', '100'],
+      ['assets:checking', 'expense:net pay', '300'],
+      ['assets:checking', 'equity:draw', '50'],
+    ])
+
+    const text = sheet.toText()
+
+    setText(text)
+
+    const transferSheet = TransferSheet.fromTextSheet(sheet)
+
+    setTransferSheet(transferSheet)
+
+    status.info('loaded example')
+  }
+
   return (
     <div>
+      <div aria-label="status" className="block">
+        {status.message}
+      </div>
+      <button onClick={() => loadExample()}>load example</button>
       <textarea
         aria-label="transfers"
         onChange={(e) => {
@@ -42,37 +71,6 @@ export function LogbookApp() {
         className="block editor"
         value={text}
       />
-      <div aria-label="status" className="block">
-        {status.message}
-      </div>
-      <button
-        onClick={() => {
-          const sheet = new TextSheet([
-            ['credit', 'debit', 'amount'],
-            ['equity:capital contribution', 'expense:office supplies', '200'],
-            ['income:via client', 'liability:income receivable', '500'],
-            ['liability:income receivable', 'assets:checking', '500'],
-            ['liability:credit card', 'expense:government fees', '135'],
-            ['income:checking interest', 'assets:checking', '1'],
-            ['income:via client', 'liability:income receivable', '500'],
-            ['assets:checking', 'expense:income tax', '100'],
-            ['assets:checking', 'expense:net pay', '300'],
-            ['assets:checking', 'equity:draw', '50'],
-          ])
-
-          const text = sheet.toText()
-
-          setText(text)
-
-          const transferSheet = TransferSheet.fromTextSheet(sheet)
-
-          setTransferSheet(transferSheet)
-
-          status.info('loaded example sheet')
-        }}
-      >
-        load example
-      </button>
       <pre aria-label="summary" className="block">
         {balanceSheet.toTextSheet().toText()}
       </pre>

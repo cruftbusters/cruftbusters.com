@@ -14,7 +14,7 @@ test('missing headers error', async ({ page }) => {
   await page.getByLabel('transfers').fill(text)
 
   await expect(page.getByLabel('status')).toHaveText(
-    'sheet error: expected all headers "credit", "debit", and "amount"',
+    'sheet error: expected headers "credit", "debit", and "amount"',
   )
 })
 
@@ -70,7 +70,7 @@ test('load an example for major accounting categories', async ({ page }) => {
 
   await page.getByRole('button', { name: 'load example' }).click()
 
-  await expect(page.getByLabel('status')).toHaveText('loaded example sheet')
+  await expect(page.getByLabel('status')).toHaveText('loaded example')
 
   const want = new TextSheet([
     ['account', 'amount'],
