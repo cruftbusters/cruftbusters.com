@@ -11,7 +11,7 @@ export class TransferSheet {
     for (const wantHeader of wantHeaders) {
       if (headers.indexOf(wantHeader) < 0) {
         throw new Error(
-          'transfer sheet does not include all headers of \"credit\", \"debit\", and \"amount\"',
+          'expected all headers \"credit\", \"debit\", and \"amount\"',
         )
       }
     }

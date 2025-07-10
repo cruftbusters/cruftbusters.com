@@ -1,65 +1,24 @@
-import { useState } from 'react'
-import { useStatus } from '../../useStatus'
-import { TextSheet } from './TextSheet'
-import { BalanceSheet } from './BalanceSheet'
-import { TransferSheet } from './TransferSheet'
-
 import './index.css'
+import { Planning } from './Planning'
+import { Link, Route, Routes } from 'react-router-dom'
+import { LogbookApp } from './LogbookApp'
 
 export function Logbook() {
-  const [text, setText] = useState('')
-
-  const [transferSheet, setTransferSheet] = useState(new TransferSheet())
-
-  const status = useStatus()
-
-  const [balanceSheet, setBalanceSheet] = useState(new BalanceSheet())
-
   return (
     <div>
       <h1>Logbook</h1>
       <p>
-        Logbook is for ad-hoc summarizations of transactions. Transactions could
-        be financial. However Logbook supports units beyond money like hours or
-        kilowatt hours or physical assets. Logbook is inspired by Datadog
-        notebooks and rich ad-hoc reporting and monitoring for software
-        telemetry.
+        Logbook is a quick bean counter. Currently it supports whole number
+        transfers between named accounts. The <code>{' load example '}</code>
+        button will clear the log sheet and insert an example featuring a few
+        real account names from each major account category. The balance sheet
+        will update in response to changes in the log sheet. Read the plan{' '}
+        <Link to="planning">here</Link>.
       </p>
-      <textarea
-        aria-label="transfers"
-        onChange={(e) => {
-          const text = e.target.value
-
-          setText(text)
-
-          try {
-            const sheet = TextSheet.parse(text)
-
-            const transferSheet = TransferSheet.fromTextSheet(sheet)
-
-            setTransferSheet(transferSheet)
-
-            status.info('success')
-          } catch (cause) {
-            status.error('error', cause)
-          }
-        }}
-        rows={8}
-        className="block editor"
-        value={text}
-      />
-      <div aria-label="status" className="block">
-        {status.message}
-      </div>
-      <button
-        className="block"
-        onClick={() => setBalanceSheet(transferSheet.toBalanceSheet())}
-      >
-        summarize
-      </button>
-      <pre aria-label="summary" className="block">
-        {balanceSheet.toTextSheet().toText()}
-      </pre>
+      <Routes>
+        <Route index element={<LogbookApp />} />
+        <Route path={'/planning'} element={<Planning />} />
+      </Routes>
     </div>
   )
 }

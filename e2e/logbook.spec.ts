@@ -13,10 +13,8 @@ test('missing headers error', async ({ page }) => {
 
   await page.getByLabel('transfers').fill(text)
 
-  await page.getByRole('button', { name: 'summarize' }).click()
-
   await expect(page.getByLabel('status')).toHaveText(
-    'error: transfer sheet does not include all headers of "credit", "debit", and "amount"',
+    'sheet error: expected all headers "credit", "debit", and "amount"',
   )
 })
 
@@ -32,9 +30,7 @@ test('single transfer and summary', async ({ page }) => {
 
   await page.getByLabel('transfers').fill(text)
 
-  await page.getByRole('button', { name: 'summarize' }).click()
-
-  await expect(page.getByLabel('status')).toHaveText('success')
+  await expect(page.getByLabel('status')).toHaveText('sheet ok')
 
   const want = new TextSheet([
     ['account', 'amount'],
@@ -58,14 +54,37 @@ test('multiple transfers and summary', async ({ page }) => {
 
   await page.getByLabel('transfers').fill(text)
 
-  await page.getByRole('button', { name: 'summarize' }).click()
-
-  await expect(page.getByLabel('status')).toHaveText('success')
+  await expect(page.getByLabel('status')).toHaveText('sheet ok')
 
   const want = new TextSheet([
     ['account', 'amount'],
     ['assets', ' ( 100 ) '],
     ['expense', ' 100 '],
+  ])
+
+  await expect(page.getByLabel('summary')).toHaveText(want.toText())
+})
+
+test('load an example for major accounting categories', async ({ page }) => {
+  await page.goto('http://localhost:5173/apps/logbook')
+
+  await page.getByRole('button', { name: 'load example' }).click()
+
+  await expect(page.getByLabel('status')).toHaveText('loaded example sheet')
+
+  const want = new TextSheet([
+    ['account', 'amount'],
+    ['assets:checking', ' 51 '],
+    ['equity:capital contribution', ' ( 200 ) '],
+    ['equity:draw', ' 50 '],
+    ['expense:government fees', ' 135 '],
+    ['expense:income tax', ' 100 '],
+    ['expense:net pay', ' 300 '],
+    ['expense:office supplies', ' 200 '],
+    ['income:checking interest', ' ( 1 ) '],
+    ['income:via client', ' ( 1000 ) '],
+    ['liability:credit card', ' ( 135 ) '],
+    ['liability:income receivable', ' 500 '],
   ])
 
   await expect(page.getByLabel('summary')).toHaveText(want.toText())
