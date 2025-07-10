@@ -13,7 +13,7 @@ test('missing headers error', async ({ page }) => {
 
   await page.getByLabel('transfers').fill(text)
 
-  await page.getByRole('button', { name: 'save' }).click()
+  await page.getByRole('button', { name: 'summarize' }).click()
 
   await expect(page.getByLabel('status')).toHaveText(
     'error: transfer sheet does not include all headers of "credit", "debit", and "amount"',
@@ -32,7 +32,7 @@ test('single transfer and summary', async ({ page }) => {
 
   await page.getByLabel('transfers').fill(text)
 
-  await page.getByRole('button', { name: 'save' }).click()
+  await page.getByRole('button', { name: 'summarize' }).click()
 
   await expect(page.getByLabel('status')).toHaveText('success')
 
@@ -58,7 +58,7 @@ test('multiple transfers and summary', async ({ page }) => {
 
   await page.getByLabel('transfers').fill(text)
 
-  await page.getByRole('button', { name: 'save' }).click()
+  await page.getByRole('button', { name: 'summarize' }).click()
 
   await expect(page.getByLabel('status')).toHaveText('success')
 

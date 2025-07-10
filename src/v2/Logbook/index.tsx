@@ -8,8 +8,12 @@ import './index.css'
 
 export function Logbook() {
   const [text, setText] = useState('')
-  const [summary, setBalanceSheet] = useState<BalanceSheet>(new BalanceSheet())
+
+  const [transferSheet, setTransferSheet] = useState(new TransferSheet())
+
   const status = useStatus()
+
+  const [balanceSheet, setBalanceSheet] = useState(new BalanceSheet())
 
   return (
     <div>
@@ -23,34 +27,38 @@ export function Logbook() {
       </p>
       <textarea
         aria-label="transfers"
-        onChange={(e) => setText(e.target.value)}
-        rows={8}
-        className="block editor"
-        value={text}
-      />
-      <button
-        className="block"
-        onClick={() => {
+        onChange={(e) => {
+          const text = e.target.value
+
+          setText(text)
+
           try {
             const sheet = TextSheet.parse(text)
 
             const transferSheet = TransferSheet.fromTextSheet(sheet)
 
-            setBalanceSheet(transferSheet.toBalanceSheet())
+            setTransferSheet(transferSheet)
 
             status.info('success')
           } catch (cause) {
             status.error('error', cause)
           }
         }}
-      >
-        save
-      </button>
+        rows={8}
+        className="block editor"
+        value={text}
+      />
       <div aria-label="status" className="block">
         {status.message}
       </div>
+      <button
+        className="block"
+        onClick={() => setBalanceSheet(transferSheet.toBalanceSheet())}
+      >
+        summarize
+      </button>
       <pre aria-label="summary" className="block">
-        {summary.toTextSheet().toText()}
+        {balanceSheet.toTextSheet().toText()}
       </pre>
     </div>
   )

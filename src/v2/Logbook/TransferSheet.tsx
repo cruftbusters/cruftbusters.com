@@ -19,7 +19,7 @@ export class TransferSheet {
     return new TransferSheet(records)
   }
 
-  constructor(private transfers: string[][]) {}
+  constructor(private transfers: string[][] = []) {}
 
   public toBalanceSheet() {
     const summary = new BalanceSheet()
