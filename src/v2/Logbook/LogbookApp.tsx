@@ -71,8 +71,13 @@ export function LogbookApp() {
         className="block editor"
         value={text}
       />
-      <pre aria-label="summary" className="block">
-        {balanceSheet.toTextSheet().toText()}
+      <pre aria-label="summary" className="block balance-sheet">
+        {balanceSheet.toTextSheet().rows.map(([key, value]) => (
+          <div key={key} className="balance-sheet-row">
+            <div>{key}</div>
+            <div>{value}</div>
+          </div>
+        ))}
       </pre>
     </div>
   )
