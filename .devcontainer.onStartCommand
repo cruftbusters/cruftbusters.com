@@ -1,0 +1,11 @@
+#!/usr/bin/env zsh
+
+cd dotcom
+
+pnpm -r install
+
+screen -d -m -S dotcom.dev pnpm dev
+
+screen -d -m -S dotcom.test pnpm vitest --ui --api 5174
+
+screen -d -m -S dotcom.e2e pnpm playwright test --ui --ui-port 5175
