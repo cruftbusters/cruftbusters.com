@@ -1,0 +1,8 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dotcom
+spec:
+  type: website
+  lifecycle: experimental
+  owner: info@cruftbusters.com
