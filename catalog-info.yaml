@@ -2,6 +2,20 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: dotcom
+  annotations:
+    cruftbusters.com/publish/github-pages/url: cruftbusters.github.io
+    cruftbusters.com/publish/github-pages/repository: https://github.com/cruftbusters/dotcom-github-pages
+    cruftbusters.com/publish/github-pages/apex: cruftbusters.com
+    cruftbusters.com/publish/github-pages/apex-a: >-
+      185.199.108.153
+      185.199.109.153
+      185.199.110.153
+      185.199.111.153
+    cruftbusters.com/publish/github-pages/apex-aaaa: >-
+      2606:50c0:8000::153
+      2606:50c0:8001::153
+      2606:50c0:8002::153
+      2606:50c0:8003::153
 spec:
   type: website
   lifecycle: experimental
