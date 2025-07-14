@@ -22,6 +22,11 @@ test('plus', () => {
 
 test('plus fractional', () => {
   {
+    const actual = Amount.parse(' 0.0 ').plus(Amount.parse(' 0.00 ')).toText()
+    const expected = '  0.00  '
+    expect(actual).toBe(expected)
+  }
+  {
     const actual = Amount.parse(' 0.1 ').plus(Amount.parse(' 0.1 ')).toText()
     const expected = '  0.2  '
     expect(actual).toBe(expected)

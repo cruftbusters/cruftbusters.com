@@ -36,7 +36,7 @@ export class Amount {
         : leftDigits - rightDigits
 
     if (mantissa === 0) {
-      return new Amount()
+      return new Amount(this.sign, 0, floor)
     } else if (mantissa < 0) {
       return new Amount(!this.sign, -mantissa, floor)
     } else {
@@ -45,11 +45,11 @@ export class Amount {
   }
 
   public toText() {
-    if (this.mantissa === 0) {
+    if (this.mantissa === 0 && this.exponent === 0) {
       return ' - '
     }
 
-    let result = this.mantissa.toString()
+    let result = this.mantissa.toString().padStart(-this.exponent, '0')
 
     const whole = result.substring(0, result.length + this.exponent) || '0'
 
