@@ -24,7 +24,7 @@ export class BalanceSheet {
   public accrue(account: string, amount: Amount) {
     const before = this.balanceSheet.get(account) || new Amount()
     const after = before.plus(amount)
-    if (after.digits === '') {
+    if (after.mantissa === 0) {
       this.balanceSheet.delete(account)
     } else {
       this.balanceSheet.set(account, after)
