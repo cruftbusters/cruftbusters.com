@@ -1,35 +1,41 @@
-import { Amount } from './Amount'
-import { BalanceSheet } from './BalanceSheet'
 import { TextSheet } from './TextSheet'
 
 export class TransferSheet {
   static fromTextSheet(sheet: TextSheet) {
     const [headers, records] = sheet.split()
 
-    const wantHeaders = ['credit', 'debit', 'amount']
-
-    for (const wantHeader of wantHeaders) {
-      if (headers.indexOf(wantHeader) < 0) {
-        throw new Error(
-          'expected headers \"credit\", \"debit\", and \"amount\"',
-        )
-      }
+    if (headers === undefined) {
+      throw Error('expected sheet not to be empty')
     }
 
-    return new TransferSheet(records)
+    return new TransferSheet(headers, records)
   }
 
-  constructor(private transfers: string[][] = []) {}
+  constructor(
+    private headers: string[],
+    private records: string[][] = [],
+  ) {}
 
-  public toBalanceSheet() {
-    const summary = new BalanceSheet()
+  public toTextSheet() {
+    return new TextSheet([this.headers, ...this.records])
+  }
 
-    for (const [credit, debit, amountText] of this.transfers) {
-      const amount = Amount.parse(amountText)
-      summary.accrue(credit, amount.negate())
-      summary.accrue(debit, amount)
+  public *select(...names: string[]) {
+    const indexes: number[] = []
+    for (const name of names) {
+      const index = this.headers.indexOf(name)
+
+      if (index < 0) {
+        throw new Error(
+          `expected headers ${names.map((name) => `"${name}"`).join(', ')}`,
+        )
+      }
+
+      indexes.push(index)
     }
 
-    return summary
+    for (const transfer of this.records) {
+      yield indexes.map((index) => transfer[index] || '')
+    }
   }
 }

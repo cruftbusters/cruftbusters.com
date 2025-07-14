@@ -14,8 +14,8 @@ test('missing headers error', async ({ page }) => {
 
   await page.getByLabel('transfers').fill(text)
 
-  await expect(page.getByLabel('status')).toHaveText(
-    'sheet error: expected headers "credit", "debit", and "amount"',
+  await expect(page.getByLabel('summary-status')).toHaveText(
+    'failed to generate balance sheet: expected headers "credit", "debit", "amount"',
   )
 })
 
@@ -31,10 +31,8 @@ test('single transfer and summary', async ({ page }) => {
 
   await page.getByLabel('transfers').fill(text)
 
-  await expect(page.getByLabel('status')).toHaveText('sheet ok')
-
   await expectToBeTextSheet(
-    page.getByLabel('summary'),
+    page.getByLabel('summary-contents'),
     new TextSheet([
       ['account', 'amount'],
       ['expense', ' 100 '],
@@ -56,10 +54,8 @@ test('multiple transfers and summary', async ({ page }) => {
 
   await page.getByLabel('transfers').fill(text)
 
-  await expect(page.getByLabel('status')).toHaveText('sheet ok')
-
   await expectToBeTextSheet(
-    page.getByLabel('summary'),
+    page.getByLabel('summary-contents'),
     new TextSheet([
       ['account', 'amount'],
       ['assets', ' ( 100 ) '],
@@ -73,10 +69,10 @@ test('load an example for major accounting categories', async ({ page }) => {
 
   await page.getByRole('button', { name: 'load example' }).click()
 
-  await expect(page.getByLabel('status')).toHaveText('loaded example')
+  await expect(page.getByLabel('app-status')).toHaveText('loaded example')
 
   await expectToBeTextSheet(
-    page.getByLabel('summary'),
+    page.getByLabel('summary-contents'),
     new TextSheet([
       ['account', 'amount'],
       ['assets:checking', ' 51 '],
