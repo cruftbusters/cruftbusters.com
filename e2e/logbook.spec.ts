@@ -14,7 +14,7 @@ test('missing headers error', async ({ page }) => {
   await page.getByLabel('transfers').fill(text)
 
   await expect(page.getByLabel('summary-status')).toHaveText(
-    'failed to generate balance sheet: expected headers "credit", "debit", "amount"',
+    'failed to generate balance sheet: expected header row to contain "credit", "debit", "amount"',
   )
 })
 

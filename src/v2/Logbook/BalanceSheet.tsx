@@ -1,9 +1,8 @@
 import { TextSheet } from './TextSheet'
 import { Amount } from './Amount'
-import { TransferSheet } from './TransferSheet'
 
 export class BalanceSheet {
-  static fromTransferSheet(transfers: TransferSheet) {
+  static fromTransfers(transfers: TextSheet) {
     const summary = new BalanceSheet()
 
     for (const [credit, debit, amountText] of transfers.select(
