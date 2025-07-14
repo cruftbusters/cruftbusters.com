@@ -5,32 +5,42 @@ import { TransferSheet } from './TransferSheet'
 import { BalanceSheetView } from './BalanceSheetView'
 
 type State = {
+  activeLogbook: string
+  logbooks: Record<string, TransferSheet>
   text: string
-  transfers: TransferSheet
 }
 
 type Action =
+  | { type: 'setActiveLogbook'; name: string }
   | { type: 'setText'; text: string }
-  | { type: 'setTransfers'; transfers: TransferSheet }
 
 export function LogbookApp() {
   const status = useStatus()
 
   const [state, dispatch] = useReducer(reducer(status), {
+    activeLogbook: 'default',
+    logbooks: {
+      default: emptyTransfers,
+      example: exampleTransfers,
+    },
     text: emptyTransfers.toTextSheet().toText(),
-    transfers: emptyTransfers,
   })
 
   return (
     <>
       <p aria-label="app-status">{status.message}</p>
-      <button
-        onClick={() =>
-          dispatch({ type: 'setTransfers', transfers: exampleTransfers })
-        }
-      >
-        load example
-      </button>
+      <label>
+        {' select logbook: '}
+        <select
+          onChange={(e) =>
+            dispatch({ type: 'setActiveLogbook', name: e.target.value })
+          }
+        >
+          {Object.keys(state.logbooks).map((key) => (
+            <option key={key}>{key}</option>
+          ))}
+        </select>
+      </label>
       <textarea
         aria-label="transfers"
         onChange={(e) => dispatch({ type: 'setText', text: e.target.value })}
@@ -38,7 +48,7 @@ export function LogbookApp() {
         className="block editor"
         value={state.text}
       />
-      <BalanceSheetView state={state} />
+      <BalanceSheetView transfers={state.logbooks[state.activeLogbook]} />
     </>
   )
 }
@@ -47,6 +57,14 @@ const reducer: (
   status: ReturnType<typeof useStatus>,
 ) => Reducer<State, Action> = (status) => (state: State, action: Action) => {
   switch (action.type) {
+    case 'setActiveLogbook':
+      status.info(`loaded ${action.name}`)
+
+      return {
+        ...state,
+        activeLogbook: action.name,
+        text: state.logbooks[action.name].toTextSheet().toText(),
+      }
     case 'setText':
       try {
         const sheet = TextSheet.parse(action.text)
@@ -55,19 +73,15 @@ const reducer: (
 
         status.clear()
 
-        return { ...state, status: '', text: action.text, transfers }
+        return {
+          ...state,
+          logbooks: { ...state.logbooks, [state.activeLogbook]: transfers },
+          text: action.text,
+        }
       } catch (cause) {
         status.error('sheet error', cause)
 
         return { ...state, text: action.text }
-      }
-    case 'setTransfers':
-      status.info('loaded example')
-
-      return {
-        ...state,
-        text: action.transfers.toTextSheet().toText(),
-        transfers: action.transfers,
       }
   }
 }

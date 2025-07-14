@@ -67,7 +67,7 @@ test('multiple transfers and summary', async ({ page }) => {
 test('load an example for major accounting categories', async ({ page }) => {
   await page.goto('http://localhost:5173/apps/logbook')
 
-  await page.getByRole('button', { name: 'load example' }).click()
+  await page.getByLabel('select logbook:').selectOption('example')
 
   await expect(page.getByLabel('app-status')).toHaveText('loaded example')
 

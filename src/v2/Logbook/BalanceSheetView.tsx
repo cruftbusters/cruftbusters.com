@@ -1,22 +1,22 @@
 import { useState, useEffect } from 'react'
 import { useStatus } from '../../useStatus'
 import { BalanceSheet } from './BalanceSheet'
-import { State } from './LogbookApp'
+import { TransferSheet } from './TransferSheet'
 
-export function BalanceSheetView({ state }: { state: State }) {
+export function BalanceSheetView({ transfers }: { transfers: TransferSheet }) {
   const status = useStatus()
 
   const [balanceSheet, setBalanceSheet] = useState(new BalanceSheet())
 
   useEffect(() => {
     try {
-      setBalanceSheet(BalanceSheet.fromTransferSheet(state.transfers))
+      setBalanceSheet(BalanceSheet.fromTransferSheet(transfers))
 
       status.clear()
     } catch (cause) {
       status.error('failed to generate balance sheet', cause)
     }
-  }, [state.transfers])
+  }, [transfers])
 
   return (
     <div>
