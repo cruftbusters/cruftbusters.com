@@ -10,10 +10,14 @@ export class Amount {
   }
 
   constructor(
-    public sign: boolean = false,
-    public mantissa: number = 0,
-    public exponent: number = 0,
+    private sign: boolean = false,
+    private mantissa: number = 0,
+    private exponent: number = 0,
   ) {}
+
+  public isZero() {
+    return this.mantissa === 0
+  }
 
   public negate() {
     return new Amount(!this.sign, this.mantissa, this.exponent)

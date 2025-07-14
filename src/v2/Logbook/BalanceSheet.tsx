@@ -18,22 +18,19 @@ export class BalanceSheet {
     return summary
   }
 
-  constructor(private balanceSheet: Map<string, Amount> = new Map()) {}
+  constructor(private m: Map<string, Amount> = new Map()) {}
 
   public accrue(account: string, amount: Amount) {
-    const before = this.balanceSheet.get(account) || new Amount()
+    const before = this.m.get(account) || new Amount()
     const after = before.plus(amount)
-    if (after.mantissa === 0) {
-      this.balanceSheet.delete(account)
-    } else {
-      this.balanceSheet.set(account, after)
-    }
+    this.m.set(account, after)
   }
 
   public toTextSheet() {
     return new TextSheet([
       ['account', 'amount'],
-      ...Array.from(this.balanceSheet.entries())
+      ...Array.from(this.m.entries())
+        .filter(([_, value]) => !value.isZero())
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([account, amount]) => [account, amount.toText()]),
     ])
