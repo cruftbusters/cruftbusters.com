@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test'
 import { TextSheet } from '../src/v2/Logbook/TextSheet'
-import { expectToBeTextSheet } from './fixtures'
 
 test('missing headers error', async ({ page }) => {
   await page.goto('http://localhost:5173/apps/logbook')
@@ -31,13 +30,12 @@ test('single transfer and summary', async ({ page }) => {
 
   await page.getByLabel('transfers').fill(text)
 
-  await expectToBeTextSheet(
-    page.getByLabel('summary-contents'),
+  await expect(page.getByLabel('summary-contents').getByRole('row')).toHaveText(
     new TextSheet([
       ['account', 'amount'],
       ['expense', '  100  '],
       ['liability', '( 100 )'],
-    ]),
+    ]).toTextLines(''),
   )
 })
 
@@ -54,13 +52,12 @@ test('multiple transfers and summary', async ({ page }) => {
 
   await page.getByLabel('transfers').fill(text)
 
-  await expectToBeTextSheet(
-    page.getByLabel('summary-contents'),
+  await expect(page.getByLabel('summary-contents').getByRole('row')).toHaveText(
     new TextSheet([
       ['account', 'amount'],
       ['assets', '( 100 )'],
       ['expense', '  100  '],
-    ]),
+    ]).toTextLines(''),
   )
 })
 
@@ -69,10 +66,7 @@ test('load an example for major accounting categories', async ({ page }) => {
 
   await page.getByLabel('select logbook:').selectOption('example')
 
-  await expect(page.getByLabel('app-status')).toHaveText('loaded example')
-
-  await expectToBeTextSheet(
-    page.getByLabel('summary-contents'),
+  await expect(page.getByLabel('summary-contents').getByRole('row')).toHaveText(
     new TextSheet([
       ['account', 'amount'],
       ['assets:checking', '  51  '],
@@ -86,6 +80,6 @@ test('load an example for major accounting categories', async ({ page }) => {
       ['income:via client', '( 1000 )'],
       ['liability:credit card', '( 135 )'],
       ['liability:income receivable', '  500  '],
-    ]),
+    ]).toTextLines(''),
   )
 })

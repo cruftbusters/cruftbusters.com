@@ -20,7 +20,11 @@ export class TextSheet {
   constructor(public rows: string[][]) {}
 
   public toText() {
-    return this.rows.map((row) => row.join(',')).join('\n')
+    return this.toTextLines().join('\n')
+  }
+
+  public toTextLines(separator = ',') {
+    return this.rows.map((row) => row.join(separator))
   }
 
   public split(): [string[], string[][]] {

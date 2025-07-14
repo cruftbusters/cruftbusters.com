@@ -23,7 +23,7 @@ export function BalanceSheetView({ transfers }: { transfers: TransferSheet }) {
       <p aria-label="summary-status">{status.message}</p>
       <pre aria-label="summary-contents" className="block balance-sheet">
         {balanceSheet.toTextSheet().rows.map(([key, value]) => (
-          <div key={key} className="balance-sheet-row">
+          <div key={key} role="row" className="balance-sheet-row">
             <div>{key}</div>
             <div>{value}</div>
           </div>

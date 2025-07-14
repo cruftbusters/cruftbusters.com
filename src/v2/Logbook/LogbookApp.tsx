@@ -58,8 +58,6 @@ const reducer: (
 ) => Reducer<State, Action> = (status) => (state: State, action: Action) => {
   switch (action.type) {
     case 'setActiveLogbook':
-      status.info(`loaded ${action.name}`)
-
       return {
         ...state,
         activeLogbook: action.name,
@@ -79,7 +77,7 @@ const reducer: (
           text: action.text,
         }
       } catch (cause) {
-        status.error('sheet error', cause)
+        status.error('failed to parse sheet from text', cause)
 
         return { ...state, text: action.text }
       }
