@@ -1,16 +1,22 @@
 export class Amount {
   static parse(text: string) {
-    const [whole, fraction = ''] = text.split('.').map((v) => v.trim())
+    const index = text.search(/(?=\d)/)
+    const prefix = text.slice(0, index).trim()
+    const [whole, fraction = ''] = text
+      .slice(index)
+      .split('.')
+      .map((v) => v.trim())
     const digits = whole + fraction
     const mantissa = ['', '-'].indexOf(digits) < 0 ? parseInt(digits) : 0
     const exponent = 0 - fraction.length
-    const amount = new Amount(false, mantissa, exponent)
+    const amount = new Amount(false, prefix, mantissa, exponent)
 
     return amount
   }
 
   constructor(
     private sign: boolean = false,
+    private prefix: string = '',
     private mantissa: number = 0,
     private exponent: number = 0,
   ) {}
@@ -20,10 +26,14 @@ export class Amount {
   }
 
   public negate() {
-    return new Amount(!this.sign, this.mantissa, this.exponent)
+    return new Amount(!this.sign, this.prefix, this.mantissa, this.exponent)
   }
 
   public plus(other: Amount) {
+    if (this.prefix !== other.prefix) {
+      throw Error('not implemented: multi prefix')
+    }
+
     const floor = Math.min(this.exponent, other.exponent)
 
     const leftDigits = this.mantissa * Math.pow(10, this.exponent - floor)
@@ -36,11 +46,11 @@ export class Amount {
         : leftDigits - rightDigits
 
     if (mantissa === 0) {
-      return new Amount(this.sign, 0, floor)
+      return new Amount(this.sign, this.prefix, 0, floor)
     } else if (mantissa < 0) {
-      return new Amount(!this.sign, -mantissa, floor)
+      return new Amount(!this.sign, this.prefix, -mantissa, floor)
     } else {
-      return new Amount(this.sign, mantissa, floor)
+      return new Amount(this.sign, this.prefix, mantissa, floor)
     }
   }
 
@@ -56,6 +66,8 @@ export class Amount {
     const fraction = result.substring(result.length + this.exponent)
 
     result = fraction ? `${whole}.${fraction}` : whole
+
+    result = this.prefix ? `${this.prefix} ${result}` : result
 
     result = this.sign ? `( ${result} )` : `  ${result}  `
 

@@ -48,7 +48,7 @@ test('plus fractional', () => {
   }
 })
 
-test('plus negative', () => {
+test('plus less negative', () => {
   const actual = Amount.parse(' 2 ').plus(Amount.parse(' 1 ').negate()).toText()
   const expected = '  1  '
   expect(actual).toBe(expected)
@@ -58,4 +58,16 @@ test('plus greater negative', () => {
   const actual = Amount.parse(' 1 ').plus(Amount.parse(' 2 ').negate()).toText()
   const expected = '( 1 )'
   expect(actual).toBe(expected)
+})
+
+test('prefix', () => {
+  const actual = Amount.parse(' $ 1 ').plus(Amount.parse(' $ 2 ')).toText()
+  const expected = '  $ 3  '
+  expect(actual).toBe(expected)
+})
+
+test('multi prefix', () => {
+  expect(() => Amount.parse(' $ 1 ').plus(Amount.parse(' USD 2 '))).toThrow(
+    'not implemented: multi prefix',
+  )
 })
