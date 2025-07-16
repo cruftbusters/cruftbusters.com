@@ -4,12 +4,17 @@ import { Amount } from './Amount'
 test('zero', () => {
   {
     const actual = Amount.parse('').toText()
-    const expected = ' - '
+    const expected = '  -  '
     expect(actual).toBe(expected)
   }
   {
     const actual = Amount.parse(' - ').toText()
-    const expected = ' - '
+    const expected = '  -  '
+    expect(actual).toBe(expected)
+  }
+  {
+    const actual = Amount.parse('$-').toText()
+    const expected = '  $ -  '
     expect(actual).toBe(expected)
   }
 })
@@ -60,14 +65,28 @@ test('plus greater negative', () => {
   expect(actual).toBe(expected)
 })
 
-test('prefix', () => {
+test('plus matching prefix', () => {
   const actual = Amount.parse(' $ 1 ').plus(Amount.parse(' $ 2 ')).toText()
   const expected = '  $ 3  '
   expect(actual).toBe(expected)
 })
 
-test('multi prefix', () => {
-  expect(() => Amount.parse(' $ 1 ').plus(Amount.parse(' USD 2 '))).toThrow(
-    'not implemented: multi prefix',
-  )
+test('plus non matching prefix', () => {
+  const left = Amount.parse(' $ 1 ')
+  const right = Amount.parse(' USD 2 ')
+  {
+    const actual = left.plus(right).toText()
+    const expected = '  $ 1  \n  USD 2  '
+    expect(actual).toStrictEqual(expected)
+  }
+  {
+    const actual = right.plus(left).toText()
+    const expected = '  USD 2  \n  $ 1  '
+    expect(actual).toStrictEqual(expected)
+  }
+  {
+    const actual = left.plus(right).plus(left.negate()).toText()
+    const expected = '  $ -  \n  USD 2  '
+    expect(actual).toStrictEqual(expected)
+  }
 })

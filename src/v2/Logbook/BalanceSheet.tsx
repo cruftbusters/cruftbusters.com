@@ -21,8 +21,8 @@ export class BalanceSheet {
   constructor(private m: Map<string, Amount> = new Map()) {}
 
   public accrue(account: string, amount: Amount) {
-    const before = this.m.get(account) || new Amount()
-    const after = before.plus(amount)
+    const before = this.m.get(account)
+    const after = before ? before.plus(amount) : amount
     this.m.set(account, after)
   }
 

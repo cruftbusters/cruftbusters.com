@@ -1,6 +1,42 @@
 export class Amount {
   static parse(text: string) {
-    const index = text.search(/(?=\d)/)
+    return new Amount([SingleAmount.parse(text)])
+  }
+
+  constructor(public amounts: SingleAmount[]) {}
+
+  public isZero() {
+    return this.amounts.every((amount) => amount.isZero())
+  }
+
+  public negate() {
+    return new Amount(this.amounts.map((amount) => amount.negate()))
+  }
+
+  public plus(other: Amount) {
+    const m: Map<string, SingleAmount> = new Map()
+
+    for (const amount of this.amounts.concat(other.amounts)) {
+      const v = m.get(amount.prefix)
+      const w = v ? v.plus(amount) : amount
+      if (w.prefix !== '' || w.mantissa !== 0 || w.exponent !== 0) {
+        m.set(amount.prefix, w)
+      } else {
+        m.delete(amount.prefix)
+      }
+    }
+
+    return new Amount(Array.from(m.values()))
+  }
+
+  public toText() {
+    return this.amounts.map((amount) => amount.toText()).join('\n') || ' - '
+  }
+}
+
+class SingleAmount {
+  static parse(text: string) {
+    const index = text.search(/(?=\d|-)/)
     const prefix = text.slice(0, index).trim()
     const [whole, fraction = ''] = text
       .slice(index)
@@ -9,16 +45,16 @@ export class Amount {
     const digits = whole + fraction
     const mantissa = ['', '-'].indexOf(digits) < 0 ? parseInt(digits) : 0
     const exponent = 0 - fraction.length
-    const amount = new Amount(false, prefix, mantissa, exponent)
+    const amount = new SingleAmount(false, prefix, mantissa, exponent)
 
     return amount
   }
 
   constructor(
-    private sign: boolean = false,
-    private prefix: string = '',
-    private mantissa: number = 0,
-    private exponent: number = 0,
+    public sign: boolean = false,
+    public prefix: string = '',
+    public mantissa: number = 0,
+    public exponent: number = 0,
   ) {}
 
   public isZero() {
@@ -26,12 +62,17 @@ export class Amount {
   }
 
   public negate() {
-    return new Amount(!this.sign, this.prefix, this.mantissa, this.exponent)
+    return new SingleAmount(
+      !this.sign,
+      this.prefix,
+      this.mantissa,
+      this.exponent,
+    )
   }
 
-  public plus(other: Amount) {
+  public plus(other: SingleAmount) {
     if (this.prefix !== other.prefix) {
-      throw Error('not implemented: multi prefix')
+      throw Error('expected matching prefix')
     }
 
     const floor = Math.min(this.exponent, other.exponent)
@@ -46,19 +87,15 @@ export class Amount {
         : leftDigits - rightDigits
 
     if (mantissa === 0) {
-      return new Amount(this.sign, this.prefix, 0, floor)
+      return new SingleAmount(this.sign, this.prefix, 0, floor)
     } else if (mantissa < 0) {
-      return new Amount(!this.sign, this.prefix, -mantissa, floor)
+      return new SingleAmount(!this.sign, this.prefix, -mantissa, floor)
     } else {
-      return new Amount(this.sign, this.prefix, mantissa, floor)
+      return new SingleAmount(this.sign, this.prefix, mantissa, floor)
     }
   }
 
   public toText() {
-    if (this.mantissa === 0 && this.exponent === 0) {
-      return ' - '
-    }
-
     let result = this.mantissa.toString().padStart(-this.exponent, '0')
 
     const whole = result.substring(0, result.length + this.exponent) || '0'
@@ -66,6 +103,8 @@ export class Amount {
     const fraction = result.substring(result.length + this.exponent)
 
     result = fraction ? `${whole}.${fraction}` : whole
+
+    result = result === '0' ? '-' : result
 
     result = this.prefix ? `${this.prefix} ${result}` : result
 
