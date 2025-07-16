@@ -1,3 +1,7 @@
+.strike {
+  text-decoration: line-through;
+}
+
 .editor {
   width: 100%;
   box-sizing: border-box;
@@ -7,6 +11,10 @@
   resize: none;
   background-color: black;
   color: white;
+}
+
+pre {
+  margin: 0;
 }
 
 .balance-sheet {

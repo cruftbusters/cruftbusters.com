@@ -20,20 +20,24 @@ export function BalanceSheetView({ transfers }: { transfers: TextSheet }) {
   }, [transfers])
 
   return (
-    <div>
-      <p aria-label="summary-status">{status.message}</p>
-      <pre aria-label="summary-contents" className="block balance-sheet">
-        <div role="row" className="balance-sheet-row">
-          <div>account</div>
-          <div className="amount-header">amount</div>
-        </div>
-        {balanceSheet.pretty().map(([account, amount]) => (
-          <div key={account} role="row" className="balance-sheet-row">
-            <div>{account}</div>
-            <AmountView amount={amount} />
+    <>
+      <p aria-label="summary-status" hidden={status.message === undefined}>
+        {status.message}
+      </p>
+      <div className="block">
+        <pre aria-label="summary-contents" className="balance-sheet">
+          <div role="row" className="balance-sheet-row">
+            <div>account</div>
+            <div className="amount-header">amount</div>
           </div>
-        ))}
-      </pre>
-    </div>
+          {balanceSheet.pretty().map(([account, amount]) => (
+            <div key={account} role="row" className="balance-sheet-row">
+              <div>{account}</div>
+              <AmountView amount={amount} />
+            </div>
+          ))}
+        </pre>
+      </div>
+    </>
   )
 }

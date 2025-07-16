@@ -27,27 +27,35 @@ export function LogbookApp() {
 
   return (
     <>
-      <p aria-label="app-status">{status.message}</p>
-      <label>
-        {' select logbook: '}
-        <select
-          onChange={(e) =>
-            dispatch({ type: 'setActiveLogbook', name: e.target.value })
-          }
-        >
-          {Object.keys(state.logbooks).map((key) => (
-            <option key={key}>{key}</option>
-          ))}
-        </select>
-      </label>
-      <textarea
-        aria-label="transfers"
-        onChange={(e) => dispatch({ type: 'setText', text: e.target.value })}
-        rows={8}
-        className="block editor"
-        value={state.text}
-      />
-      <BalanceSheetView transfers={state.logbooks[state.activeLogbook]} />
+      <p aria-label="app-status" hidden={status.message === undefined}>
+        {status.message}
+      </p>
+      <p>
+        <label>
+          {' select logbook: '}
+          <select
+            onChange={(e) =>
+              dispatch({ type: 'setActiveLogbook', name: e.target.value })
+            }
+          >
+            {Object.keys(state.logbooks).map((key) => (
+              <option key={key}>{key}</option>
+            ))}
+          </select>
+        </label>
+      </p>
+      <div className="block">
+        <textarea
+          aria-label="transfers"
+          onChange={(e) => dispatch({ type: 'setText', text: e.target.value })}
+          rows={8}
+          className="editor"
+          value={state.text}
+        />
+      </div>
+      <div className="block">
+        <BalanceSheetView transfers={state.logbooks[state.activeLogbook]} />
+      </div>
     </>
   )
 }
