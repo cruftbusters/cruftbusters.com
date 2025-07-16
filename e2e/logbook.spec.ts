@@ -77,7 +77,7 @@ test('load an example for major accounting categories', async ({ page }) => {
       ['expense:net pay', '  300  '],
       ['expense:office supplies', '  200  '],
       ['income:checking interest', '( 1 )'],
-      ['income:via client', '( 1000 )'],
+      ['income:via client', '( 1,000 )'],
       ['liability:credit card', '( 135 )'],
       ['liability:income receivable', '  500  '],
     ]).toTextLines(''),

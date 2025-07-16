@@ -19,6 +19,14 @@ test('zero', () => {
   }
 })
 
+test('commas', () => {
+  {
+    const actual = Amount.parse(' $ 1,000,000.000 ').toText()
+    const expected = '  $ 1,000,000.000  '
+    expect(actual).toBe(expected)
+  }
+})
+
 test('plus', () => {
   const actual = Amount.parse(' 1 ').plus(Amount.parse(' 1 ')).toText()
   const expected = '  2  '

@@ -36,9 +36,10 @@ export class Amount {
 
 class SingleAmount {
   static parse(text: string) {
-    const index = text.search(/(?=\d|-)/)
-    const prefix = text.slice(0, index).trim()
-    const [whole, fraction = ''] = text
+    const textWithoutCommas = text.replace(/,/g, '')
+    const index = textWithoutCommas.search(/(?=\d|-)/)
+    const prefix = textWithoutCommas.slice(0, index).trim()
+    const [whole, fraction = ''] = textWithoutCommas
       .slice(index)
       .split('.')
       .map((v) => v.trim())
@@ -98,7 +99,16 @@ class SingleAmount {
   public toText() {
     let result = this.mantissa.toString().padStart(-this.exponent, '0')
 
-    const whole = result.substring(0, result.length + this.exponent) || '0'
+    const _whole = result.substring(0, result.length + this.exponent) || '0'
+
+    let whole = ''
+
+    for (let index = 0; index < _whole.length; index++) {
+      if (index !== 0 && index % 3 === 0 && index < _whole.length) {
+        whole = `,${whole}`
+      }
+      whole = `${_whole[_whole.length - index - 1]}${whole}`
+    }
 
     const fraction = result.substring(result.length + this.exponent)
 
