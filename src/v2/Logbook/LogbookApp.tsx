@@ -85,13 +85,13 @@ const emptyTransfers = new TextSheet([['credit', 'debit', 'amount']])
 
 const exampleTransfers = new TextSheet([
   ['credit', 'debit', 'amount'],
-  ['equity:capital contribution', 'expense:office supplies', '200'],
-  ['income:via client', 'liability:income receivable', '500'],
-  ['liability:income receivable', 'assets:checking', '500'],
-  ['liability:credit card', 'expense:government fees', '135'],
-  ['income:checking interest', 'assets:checking', '1'],
-  ['income:via client', 'liability:income receivable', '500'],
-  ['assets:checking', 'expense:income tax', '100'],
-  ['assets:checking', 'expense:net pay', '300'],
-  ['assets:checking', 'equity:draw', '50'],
+  ['equity:capital contribution', 'expense:office supplies', '$200.00'],
+  ['income:via client', 'liability:income receivable', '$500.00'],
+  ['liability:income receivable', 'assets:checking', '$500.00'],
+  ['liability:credit card', 'expense:government fees', '$135.00'],
+  ['income:checking interest', 'assets:checking', '$1.00'],
+  ['income:via client', 'liability:income receivable', '$500.00'],
+  ['assets:checking', 'expense:income tax', '$100.00'],
+  ['assets:checking', 'expense:net pay', '$300.00'],
+  ['assets:checking', 'equity:draw', '$50.00'],
 ])

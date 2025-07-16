@@ -18,7 +18,7 @@ export class BalanceSheet {
     return summary
   }
 
-  constructor(private m: Map<string, Amount> = new Map()) {}
+  constructor(private readonly m: Map<string, Amount> = new Map()) {}
 
   public accrue(account: string, amount: Amount) {
     const before = this.m.get(account)
@@ -34,5 +34,11 @@ export class BalanceSheet {
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([account, amount]) => [account, amount.toText()]),
     ])
+  }
+
+  public pretty() {
+    return Array.from(this.m.entries())
+      .filter(([_, value]) => !value.isZero())
+      .sort(([a], [b]) => a.localeCompare(b))
   }
 }

@@ -97,25 +97,29 @@ class SingleAmount {
   }
 
   public toText() {
-    let result = this.mantissa.toString().padStart(-this.exponent, '0')
-
-    {
-      let whole = result.substring(0, result.length + this.exponent) || '0'
-
-      for (let index = whole.length - 3; index > 0; index -= 3) {
-        whole = whole.substring(0, index) + ',' + whole.substring(index)
-      }
-
-      const fraction = result.substring(result.length + this.exponent)
-
-      result = fraction ? `${whole}.${fraction}` : whole
-    }
-
-    result = result === '0' ? '-' : result
+    let result = this.toNumberText()
 
     result = this.prefix ? `${this.prefix} ${result}` : result
 
     result = this.sign ? `( ${result} )` : `  ${result}  `
+
+    return result
+  }
+
+  public toNumberText() {
+    let result = this.mantissa.toString().padStart(-this.exponent, '0')
+
+    let whole = result.substring(0, result.length + this.exponent) || '0'
+
+    for (let index = whole.length - 3; index > 0; index -= 3) {
+      whole = whole.substring(0, index) + ',' + whole.substring(index)
+    }
+
+    const fraction = result.substring(result.length + this.exponent)
+
+    result = fraction ? `${whole}.${fraction}` : whole
+
+    result = result === '0' ? '-' : result
 
     return result
   }

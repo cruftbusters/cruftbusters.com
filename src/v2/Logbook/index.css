@@ -11,16 +11,38 @@
 
 .balance-sheet {
   display: inline-grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: auto 1em auto auto auto auto;
+  column-gap: 0.5em;
 }
 
 .balance-sheet-row {
   display: grid;
   grid-template-columns: subgrid;
   grid-column: 1 / -1;
-  gap: 0 1em;
+}
+
+.balance-sheet-row:nth-child(1) {
+  font-weight: bold;
 }
 
 .balance-sheet-row > :nth-child(2) {
+  text-align: right;
+}
+
+.amount-header {
+  grid-column: 3 / -2;
+}
+
+.amount {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 3 / -1;
+  text-align: right;
+}
+
+.amount-one {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
   text-align: right;
 }
