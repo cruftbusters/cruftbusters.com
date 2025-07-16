@@ -99,20 +99,17 @@ class SingleAmount {
   public toText() {
     let result = this.mantissa.toString().padStart(-this.exponent, '0')
 
-    const _whole = result.substring(0, result.length + this.exponent) || '0'
+    {
+      let whole = result.substring(0, result.length + this.exponent) || '0'
 
-    let whole = ''
-
-    for (let index = 0; index < _whole.length; index++) {
-      if (index !== 0 && index % 3 === 0 && index < _whole.length) {
-        whole = `,${whole}`
+      for (let index = whole.length - 3; index > 0; index -= 3) {
+        whole = whole.substring(0, index) + ',' + whole.substring(index)
       }
-      whole = `${_whole[_whole.length - index - 1]}${whole}`
+
+      const fraction = result.substring(result.length + this.exponent)
+
+      result = fraction ? `${whole}.${fraction}` : whole
     }
-
-    const fraction = result.substring(result.length + this.exponent)
-
-    result = fraction ? `${whole}.${fraction}` : whole
 
     result = result === '0' ? '-' : result
 
