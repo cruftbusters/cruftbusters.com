@@ -13,20 +13,38 @@ type Action =
   | { type: 'setActiveLogbook'; name: string }
   | { type: 'setText'; text: string }
 
-export function LogbookApp() {
+export function App() {
   const status = useStatus()
 
   const [state, dispatch] = useReducer(reducer(status), {
     activeLogbook: 'default',
     logbooks: {
-      default: emptyTransfers,
-      example: exampleTransfers,
+      default: new TextSheet([['credit', 'debit', 'amount']]),
+      'major accounting categories': new TextSheet([
+        ['credit', 'debit', 'amount'],
+        ['equity:capital contribution', 'expense:office supplies', '$200.00'],
+        ['income:via client', 'liability:income receivable', '$500.00'],
+        ['liability:income receivable', 'assets:checking', '$500.00'],
+        ['liability:credit card', 'expense:government fees', '$135.00'],
+        ['income:checking interest', 'assets:checking', '$1.00'],
+        ['income:via client', 'liability:income receivable', '$500.00'],
+        ['assets:checking', 'expense:income tax', '$100.00'],
+        ['assets:checking', 'expense:net pay', '$300.00'],
+        ['assets:checking', 'equity:draw', '$50.00'],
+      ]),
     },
-    text: emptyTransfers.toText(),
+    text: new TextSheet([['credit', 'debit', 'amount']]).toText(),
   })
 
   return (
     <>
+      <p>
+        Logbook is a quick bean counter. Each record moves something from one
+        account to another. Try adding this line:
+      </p>
+      <p>
+        <code>my bean factory, my bean lover, 1000 beans</code>
+      </p>
       <p aria-label="app-status" hidden={status.message === undefined}>
         {status.message}
       </p>
@@ -88,18 +106,3 @@ const reducer: (
       }
   }
 }
-
-const emptyTransfers = new TextSheet([['credit', 'debit', 'amount']])
-
-const exampleTransfers = new TextSheet([
-  ['credit', 'debit', 'amount'],
-  ['equity:capital contribution', 'expense:office supplies', '$200.00'],
-  ['income:via client', 'liability:income receivable', '$500.00'],
-  ['liability:income receivable', 'assets:checking', '$500.00'],
-  ['liability:credit card', 'expense:government fees', '$135.00'],
-  ['income:checking interest', 'assets:checking', '$1.00'],
-  ['income:via client', 'liability:income receivable', '$500.00'],
-  ['assets:checking', 'expense:income tax', '$100.00'],
-  ['assets:checking', 'expense:net pay', '$300.00'],
-  ['assets:checking', 'equity:draw', '$50.00'],
-])

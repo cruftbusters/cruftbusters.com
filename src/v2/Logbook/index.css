@@ -1,3 +1,14 @@
+nav {
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: auto;
+  column-gap: 0.5em;
+}
+
+nav a {
+  text-decoration: none;
+}
+
 .strike {
   text-decoration: line-through;
 }
