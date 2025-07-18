@@ -1,17 +1,34 @@
-import { Amount } from './Amount'
+import { Amount, SingleAmount } from './Amount'
+import { SingleInnerAmount } from './Amount'
 
 export function AmountView({ amount }: { amount: Amount }) {
   return (
     <div className="amount">
       {amount.amounts.map((single) => (
-        <div key={single.prefix} className="amount-one">
-          <div>{single.sign ? '(' : ''}</div>
-          <div>{single.prefix}</div>
-          <div>{single.toNumberText()}</div>
-          <div>{single.suffix}</div>
-          <div>{single.sign ? ')' : ''}</div>
-        </div>
+        <SingleAmountView amount={single} key={single.key()} />
       ))}
+    </div>
+  )
+}
+
+function SingleAmountView({ amount }: { amount: SingleAmount }) {
+  return (
+    <div className="amount-one">
+      <div>{amount.sign ? '(' : ''}</div>
+      <div>{amount.prefix}</div>
+      <SingleInnerAmountView amount={amount.innerAmount()} />
+      <div>{amount.suffix}</div>
+      <div>{amount.sign ? ')' : ''}</div>
+    </div>
+  )
+}
+
+function SingleInnerAmountView({ amount }: { amount: SingleInnerAmount }) {
+  return (
+    <div className="amount-one-inner">
+      <div>{amount.whole()}</div>
+      <div>{amount.separator('.')}</div>
+      <div>{amount.fraction()}</div>
     </div>
   )
 }

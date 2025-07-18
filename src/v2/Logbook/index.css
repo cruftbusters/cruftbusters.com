@@ -19,7 +19,7 @@ pre {
 
 .balance-sheet {
   display: inline-grid;
-  grid-template-columns: auto 1em repeat(5, auto);
+  grid-template-columns: auto 1em repeat(7, auto);
   column-gap: 0.5em;
 }
 
@@ -52,5 +52,11 @@ pre {
   display: grid;
   grid-template-columns: subgrid;
   grid-column: 1 / -1;
-  text-align: right;
+}
+
+.amount-one-inner {
+  column-gap: 0;
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: span 3;
 }

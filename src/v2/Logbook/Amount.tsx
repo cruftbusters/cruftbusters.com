@@ -22,10 +22,7 @@ export class Amount {
     const m: Map<string, SingleAmount> = new Map()
 
     for (const amount of this.amounts.concat(other.amounts)) {
-      const key = JSON.stringify({
-        prefix: amount.prefix,
-        suffix: amount.suffix,
-      })
+      const key = amount.key()
       const v = m.get(key)
       const w = v ? v.plus(amount) : amount
       if (w.isEmpty()) {
@@ -66,6 +63,10 @@ export class SingleAmount {
     public exponent: number = 0,
     public suffix: string = '',
   ) {}
+
+  public key() {
+    return JSON.stringify({ prefix: this.prefix, suffix: this.suffix })
+  }
 
   public isEmpty() {
     return this.prefix === '' && this.mantissa === 0 && this.exponent === 0
@@ -124,11 +125,7 @@ export class SingleAmount {
     }
   }
 
-  public toNumberText() {
-    if (this.isZero()) {
-      return '-'
-    }
-
+  public innerAmount() {
     let result = this.mantissa.toString().padStart(-this.exponent, '0')
 
     let whole = result.substring(0, result.length + this.exponent) || '0'
@@ -139,10 +136,25 @@ export class SingleAmount {
 
     const fraction = result.substring(result.length + this.exponent)
 
-    result = fraction ? `${whole}.${fraction}` : whole
+    return new SingleInnerAmount(whole, fraction)
+  }
+}
 
-    result = result === '0' ? '-' : result
+export class SingleInnerAmount {
+  constructor(
+    private readonly _whole: string,
+    private readonly _fraction: string,
+  ) {}
 
-    return result
+  public whole() {
+    return this._whole
+  }
+
+  public separator(text: string) {
+    return this._fraction ? text : ''
+  }
+
+  public fraction() {
+    return this._fraction
   }
 }
