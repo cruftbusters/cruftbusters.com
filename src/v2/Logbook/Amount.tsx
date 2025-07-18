@@ -22,12 +22,16 @@ export class Amount {
     const m: Map<string, SingleAmount> = new Map()
 
     for (const amount of this.amounts.concat(other.amounts)) {
-      const v = m.get(amount.prefix)
+      const key = JSON.stringify({
+        prefix: amount.prefix,
+        suffix: amount.suffix,
+      })
+      const v = m.get(key)
       const w = v ? v.plus(amount) : amount
       if (w.isEmpty()) {
-        m.delete(amount.prefix)
+        m.delete(key)
       } else {
-        m.set(amount.prefix, w)
+        m.set(key, w)
       }
     }
 
@@ -37,17 +41,20 @@ export class Amount {
 
 export class SingleAmount {
   static parse(text: string) {
-    const textWithoutCommas = text.replace(/,/g, '')
-    const index = textWithoutCommas.search(/(?=\d|-)/)
-    const prefix = textWithoutCommas.slice(0, index).trim()
-    const [whole, fraction = ''] = textWithoutCommas
-      .slice(index)
-      .split('.')
-      .map((v) => v.trim())
+    const m = text.match(/^\s*([^\s\d-]*)\s*(-|[\d,]*)\.?(\d*)\s*([^\d]*?)\s*$/)
+
+    if (!m) {
+      throw Error(`failed to parse input: '${text}'`)
+    }
+
+    let [_, prefix, whole, fraction, suffix] = m
+
+    whole = whole.replace(/,/g, '')
+
     const digits = whole + fraction
     const mantissa = ['', '-'].indexOf(digits) < 0 ? parseInt(digits) : 0
     const exponent = 0 - fraction.length
-    const amount = new SingleAmount(false, prefix, mantissa, exponent)
+    const amount = new SingleAmount(false, prefix, mantissa, exponent, suffix)
 
     return amount
   }
@@ -57,6 +64,7 @@ export class SingleAmount {
     public prefix: string = '',
     public mantissa: number = 0,
     public exponent: number = 0,
+    public suffix: string = '',
   ) {}
 
   public isEmpty() {
@@ -73,12 +81,15 @@ export class SingleAmount {
       this.prefix,
       this.mantissa,
       this.exponent,
+      this.suffix,
     )
   }
 
   public plus(other: SingleAmount) {
     if (this.prefix !== other.prefix) {
       throw Error('expected matching prefix')
+    } else if (this.suffix !== other.suffix) {
+      throw Error('expected matching suffix')
     }
 
     const floor = Math.min(this.exponent, other.exponent)
@@ -93,11 +104,23 @@ export class SingleAmount {
         : leftDigits - rightDigits
 
     if (mantissa === 0) {
-      return new SingleAmount(this.sign, this.prefix, 0, floor)
+      return new SingleAmount(this.sign, this.prefix, 0, floor, this.suffix)
     } else if (mantissa < 0) {
-      return new SingleAmount(!this.sign, this.prefix, -mantissa, floor)
+      return new SingleAmount(
+        !this.sign,
+        this.prefix,
+        -mantissa,
+        floor,
+        this.suffix,
+      )
     } else {
-      return new SingleAmount(this.sign, this.prefix, mantissa, floor)
+      return new SingleAmount(
+        this.sign,
+        this.prefix,
+        mantissa,
+        floor,
+        this.suffix,
+      )
     }
   }
 

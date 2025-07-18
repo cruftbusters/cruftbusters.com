@@ -19,7 +19,7 @@ pre {
 
 .balance-sheet {
   display: inline-grid;
-  grid-template-columns: auto 1em auto auto auto auto;
+  grid-template-columns: auto 1em repeat(5, auto);
   column-gap: 0.5em;
 }
 
@@ -38,7 +38,7 @@ pre {
 }
 
 .amount-header {
-  grid-column: 3 / -2;
+  grid-column: 3 / -3;
 }
 
 .amount {

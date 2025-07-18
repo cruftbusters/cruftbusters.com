@@ -8,11 +8,11 @@ export function Planning() {
           support for multiple currencies and resource types (prefix)
         </li>
         <li className="strike">multiple named books</li>
-        <li>smart editor</li>
-        <li>
+        <li className="strike">
           suffix resource types (for example: kilowatt hours, assets like Google
           Pixel 9)
         </li>
+        <li>smart editor</li>
         <li>balance sheet group account rollup</li>
         <li>local persistence and create delete rename books</li>
         <li>filter balance sheet by start date, end date, and account(s)</li>

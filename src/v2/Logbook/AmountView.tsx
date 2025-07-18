@@ -8,6 +8,7 @@ export function AmountView({ amount }: { amount: Amount }) {
           <div>{single.sign ? '(' : ''}</div>
           <div>{single.prefix}</div>
           <div>{single.toNumberText()}</div>
+          <div>{single.suffix}</div>
           <div>{single.sign ? ')' : ''}</div>
         </div>
       ))}
