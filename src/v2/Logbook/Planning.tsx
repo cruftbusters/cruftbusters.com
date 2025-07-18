@@ -8,6 +8,7 @@ export function Planning() {
           support for multiple currencies and resource types (prefix)
         </li>
         <li className="strike">multiple named books</li>
+        <li>smart editor</li>
         <li>
           suffix resource types (for example: kilowatt hours, assets like Google
           Pixel 9)
@@ -16,18 +17,15 @@ export function Planning() {
         <li>local persistence and create delete rename books</li>
         <li>filter balance sheet by start date, end date, and account(s)</li>
         <li>
-          breakout balance sheet by consecutive intervals like months, quarters,
-          and years
-        </li>
-        <li>
           balance sheet querier (input for example: "assets - liabilities"
           calculates assets less liability)
         </li>
-        <li>smart editor</li>
-        <li>gauge (balance) visualizations</li>
         <li>
-          counter (flow pnl) visualizations like sankey and timeseries bars
+          balance timeseries (like every day, week, month, quarter, or year)
         </li>
+        <li>bar graph for flow over time</li>
+        <li>line graph for balance over time</li>
+        <li>sankey for balance</li>
         <li>sync with a self-hosted server</li>
         <li>statement checking</li>
       </ul>
