@@ -26,16 +26,6 @@ export class BalanceSheet {
     this.m.set(account, after)
   }
 
-  public toTextSheet() {
-    return new TextSheet([
-      ['account', 'amount'],
-      ...Array.from(this.m.entries())
-        .filter(([_, value]) => !value.isZero())
-        .sort(([a], [b]) => a.localeCompare(b))
-        .map(([account, amount]) => [account, amount.toText()]),
-    ])
-  }
-
   public pretty() {
     return Array.from(this.m.entries())
       .filter(([_, value]) => !value.isZero())

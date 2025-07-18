@@ -1,9 +1,14 @@
 export class Amount {
   static parse(text: string) {
-    return new Amount([SingleAmount.parse(text)])
+    const singleAmount = SingleAmount.parse(text)
+    return new Amount([singleAmount])
   }
 
   constructor(public amounts: SingleAmount[]) {}
+
+  public isEmpty() {
+    return this.amounts.every((amount) => amount.isEmpty())
+  }
 
   public isZero() {
     return this.amounts.every((amount) => amount.isZero())
@@ -19,22 +24,18 @@ export class Amount {
     for (const amount of this.amounts.concat(other.amounts)) {
       const v = m.get(amount.prefix)
       const w = v ? v.plus(amount) : amount
-      if (w.prefix !== '' || w.mantissa !== 0 || w.exponent !== 0) {
-        m.set(amount.prefix, w)
-      } else {
+      if (w.isEmpty()) {
         m.delete(amount.prefix)
+      } else {
+        m.set(amount.prefix, w)
       }
     }
 
     return new Amount(Array.from(m.values()))
   }
-
-  public toText() {
-    return this.amounts.map((amount) => amount.toText()).join('\n') || ' - '
-  }
 }
 
-class SingleAmount {
+export class SingleAmount {
   static parse(text: string) {
     const textWithoutCommas = text.replace(/,/g, '')
     const index = textWithoutCommas.search(/(?=\d|-)/)
@@ -57,6 +58,10 @@ class SingleAmount {
     public mantissa: number = 0,
     public exponent: number = 0,
   ) {}
+
+  public isEmpty() {
+    return this.prefix === '' && this.mantissa === 0 && this.exponent === 0
+  }
 
   public isZero() {
     return this.mantissa === 0
@@ -96,17 +101,11 @@ class SingleAmount {
     }
   }
 
-  public toText() {
-    let result = this.toNumberText()
-
-    result = this.prefix ? `${this.prefix} ${result}` : result
-
-    result = this.sign ? `( ${result} )` : `  ${result}  `
-
-    return result
-  }
-
   public toNumberText() {
+    if (this.isZero()) {
+      return '-'
+    }
+
     let result = this.mantissa.toString().padStart(-this.exponent, '0')
 
     let whole = result.substring(0, result.length + this.exponent) || '0'
