@@ -36,6 +36,8 @@ export function App() {
     text: new TextSheet([['credit', 'debit', 'amount']]).toText(),
   })
 
+  const logbook = state.logbooks[state.activeLogbook]
+
   return (
     <>
       <p>
@@ -72,7 +74,7 @@ export function App() {
         />
       </div>
       <div className="block">
-        <BalanceSheetView transfers={state.logbooks[state.activeLogbook]} />
+        <BalanceSheetView logbook={logbook} />
       </div>
     </>
   )
