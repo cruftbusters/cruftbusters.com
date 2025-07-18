@@ -2,7 +2,7 @@ import { TextSheet } from './TextSheet'
 import { Amount } from './Amount'
 
 export class BalanceSheet {
-  static fromTransfers(transfers: TextSheet) {
+  static fromLogbook(transfers: TextSheet) {
     const summary = new BalanceSheet()
 
     for (const [credit, debit, amountText] of transfers.select(

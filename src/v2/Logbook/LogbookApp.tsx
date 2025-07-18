@@ -25,6 +25,8 @@ export function LogbookApp() {
     text: emptyTransfers.toText(),
   })
 
+  const logbook = state.logbooks[state.activeLogbook]
+
   return (
     <>
       <p aria-label="app-status" hidden={status.message === undefined}>
@@ -54,7 +56,7 @@ export function LogbookApp() {
         />
       </div>
       <div className="block">
-        <BalanceSheetView transfers={state.logbooks[state.activeLogbook]} />
+        <BalanceSheetView logbook={logbook} />
       </div>
     </>
   )

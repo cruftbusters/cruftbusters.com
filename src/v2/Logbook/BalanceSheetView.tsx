@@ -4,20 +4,20 @@ import { BalanceSheet } from './BalanceSheet'
 import { TextSheet } from './TextSheet'
 import { AmountView } from './AmountView'
 
-export function BalanceSheetView({ transfers }: { transfers: TextSheet }) {
+export function BalanceSheetView({ logbook }: { logbook: TextSheet }) {
   const status = useStatus()
 
   const [balanceSheet, setBalanceSheet] = useState(new BalanceSheet())
 
   useEffect(() => {
     try {
-      setBalanceSheet(BalanceSheet.fromTransfers(transfers))
+      setBalanceSheet(BalanceSheet.fromLogbook(logbook))
 
       status.clear()
     } catch (cause) {
       status.error('failed to generate balance sheet', cause)
     }
-  }, [transfers])
+  }, [logbook])
 
   return (
     <>
