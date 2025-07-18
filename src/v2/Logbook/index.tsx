@@ -11,7 +11,7 @@ export function Logbook() {
         Logbook is a quick bean counter. The log sheet has one line per transfer
         between one credit and one debit account. The balance sheet will update
         in response to changes in the log sheet. The
-        <code>{' select logbook '}</code>
+        <code>{' logbook '}</code>
         dropdown has an example featuring a few real account names from major
         account categories. Read the plan <Link to="planning">here</Link>.
       </p>

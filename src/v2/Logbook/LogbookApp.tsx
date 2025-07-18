@@ -34,7 +34,7 @@ export function LogbookApp() {
       </p>
       <p>
         <label>
-          {' select logbook: '}
+          {' logbook: '}
           <select
             onChange={(e) =>
               dispatch({ type: 'setActiveLogbook', name: e.target.value })

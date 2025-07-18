@@ -2,29 +2,29 @@ import { TextSheet } from './TextSheet'
 import { Amount } from './Amount'
 
 export class BalanceSheet {
-  static fromLogbook(transfers: TextSheet) {
-    const summary = new BalanceSheet()
+  static fromLogbook(logbook: TextSheet) {
+    const m = new Map()
 
-    for (const [credit, debit, amountText] of transfers.select(
+    function accrue(account: string, amount: Amount) {
+      const before = m.get(account)
+      const after = before ? before.plus(amount) : amount
+      m.set(account, after)
+    }
+
+    for (const [credit, debit, amountText] of logbook.select(
       'credit',
       'debit',
       'amount',
     )) {
       const amount = Amount.parse(amountText)
-      summary.accrue(credit, amount.negate())
-      summary.accrue(debit, amount)
+      accrue(credit, amount.negate())
+      accrue(debit, amount)
     }
 
-    return summary
+    return new BalanceSheet(m)
   }
 
   constructor(private readonly m: Map<string, Amount> = new Map()) {}
-
-  public accrue(account: string, amount: Amount) {
-    const before = this.m.get(account)
-    const after = before ? before.plus(amount) : amount
-    this.m.set(account, after)
-  }
 
   public pretty() {
     return Array.from(this.m.entries())
