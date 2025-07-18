@@ -60,3 +60,7 @@ pre {
   grid-template-columns: subgrid;
   grid-column: span 3;
 }
+
+.fraction {
+  text-align: left;
+}

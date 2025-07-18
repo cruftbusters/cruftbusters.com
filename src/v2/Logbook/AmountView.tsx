@@ -28,7 +28,7 @@ function SingleInnerAmountView({ amount }: { amount: SingleInnerAmount }) {
     <div className="amount-one-inner">
       <div>{amount.whole()}</div>
       <div>{amount.separator('.')}</div>
-      <div>{amount.fraction()}</div>
+      <div className="fraction">{amount.fraction()}</div>
     </div>
   )
 }
