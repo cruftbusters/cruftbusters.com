@@ -15,7 +15,12 @@ export function Planning() {
         <li>smart editor</li>
         <li>balance sheet group account rollup</li>
         <li>local persistence and create delete rename books</li>
-        <li>filter balance sheet by start date, end date, and account(s)</li>
+        <li>multiple named pages per logbook</li>
+        <li>
+          filter input by start date, end date, account(s), logbook(s), page(s),
+          prefix, and suffix
+        </li>
+        <li>filter "not" operator</li>
         <li>
           balance sheet querier (input for example: "assets - liabilities"
           calculates assets less liability)
@@ -26,7 +31,7 @@ export function Planning() {
         <li>bar graph for flow over time</li>
         <li>line graph for balance over time</li>
         <li>sankey for balance</li>
-        <li>sync with a self-hosted server</li>
+        <li>sync between multiple browsers/devices</li>
         <li>statement checking</li>
       </ul>
     </div>
