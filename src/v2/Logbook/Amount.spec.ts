@@ -20,9 +20,9 @@ test('parse prefix', () => {
 })
 
 test('parse suffix', () => {
-  const actual = Amount.parse(' - kilowatt hours ')
+  const actual = Amount.parse(' - Google Pixel 9')
   const expected = new Amount([
-    new SingleAmount(false, '', 0, 0, 'kilowatt hours'),
+    new SingleAmount(false, '', 0, 0, 'Google Pixel 9'),
   ])
   expect(actual).toStrictEqual(expected)
 })

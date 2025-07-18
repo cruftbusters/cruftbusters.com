@@ -38,7 +38,9 @@ export class Amount {
 
 export class SingleAmount {
   static parse(text: string) {
-    const m = text.match(/^\s*([^\s\d-]*)\s*(-|[\d,]*)\.?(\d*)\s*([^\d]*?)\s*$/)
+    const m = text.match(
+      /^\s*([^\s\d-]*)\s*(-|[\d,]*)\.?(\d*)\s*([^\d]?.*?)\s*$/,
+    )
 
     if (!m) {
       throw Error(`failed to parse input: '${text}'`)
