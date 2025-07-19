@@ -17,6 +17,15 @@ describe('parsing', () => {
       new TextSheet([['h1', 'h2']]),
     )
   })
+
+  test('trim lines', () => {
+    expect(TextSheet.parse(' x , x \n x , x ')).toStrictEqual(
+      new TextSheet([
+        ['x ', ' x'],
+        ['x ', ' x'],
+      ]),
+    )
+  })
 })
 
 describe('formatting', () => {

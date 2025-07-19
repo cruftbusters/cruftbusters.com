@@ -9,7 +9,7 @@ export class TextSheet {
       }
     }
 
-    const lines = text.split('\n')
+    const lines = text.split('\n').map((line) => line.trim())
 
     const rows =
       separator !== undefined
