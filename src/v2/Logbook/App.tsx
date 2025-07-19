@@ -32,6 +32,15 @@ export function App() {
         ['assets:checking', 'expense:net pay', '$300.00'],
         ['assets:checking', 'equity:draw', '$50.00'],
       ]),
+      'timekeeping and credit': TextSheet.parse(
+        ` credit,debit,amount
+          my hours,income:via client,40.00 h
+          income:via client,liability:client receivable,$1000.00
+          liability:credit card,expense:mobile phone,$900.00
+          expense:mobile phone,assets,1 Google Pixel 9
+          liability:client receivable,assets:cash,$1000.00
+        `,
+      ),
     },
     text: new TextSheet([['credit', 'debit', 'amount']]).toText(),
   })
