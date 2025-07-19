@@ -36,6 +36,7 @@ export function Planning() {
           <li>sankey for balance</li>
           <li>sync between multiple browsers/devices</li>
           <li>statement checking</li>
+          <li>attach invoice to a transfer or group of transfers</li>
         </ul>
       </p>
     </>
