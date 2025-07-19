@@ -17,7 +17,7 @@ function SingleAmountView({ amount }: { amount: SingleAmount }) {
       <div>{amount.sign ? '(' : ''}</div>
       <div>{amount.prefix}</div>
       <SingleInnerAmountView amount={amount.innerAmount()} />
-      <div>{amount.suffix}</div>
+      <div className="left-align">{amount.suffix}</div>
       <div>{amount.sign ? ')' : ''}</div>
     </div>
   )
@@ -28,7 +28,7 @@ function SingleInnerAmountView({ amount }: { amount: SingleInnerAmount }) {
     <div className="amount-one-inner">
       <div>{amount.whole()}</div>
       <div>{amount.separator('.')}</div>
-      <div className="fraction">{amount.fraction()}</div>
+      <div className="left-align">{amount.fraction()}</div>
     </div>
   )
 }
