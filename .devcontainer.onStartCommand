@@ -8,7 +8,7 @@ pnpm -r install
 
 screen -d -m -S dotcom.dev pnpm dev
 
-screen -d -m -S dotcom.test pnpm vitest --ui --api 5174
+screen -d -m -S dotcom.test pnpm vitest --ui --api.host :: --api.port 5174
 
 screen -d -m -S dotcom.e2e pnpm playwright test --ui --ui-host :: --ui-port 5175
 
