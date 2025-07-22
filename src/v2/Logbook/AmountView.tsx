@@ -17,8 +17,8 @@ function SingleAmountView({ amount }: { amount: SingleAmount }) {
       <div>{amount.sign ? '(' : ''}</div>
       <div>{amount.prefix}</div>
       <SingleInnerAmountView amount={amount.innerAmount()} />
-      <div className="left-align">{amount.suffix}</div>
       <div>{amount.sign ? ')' : ''}</div>
+      <div className="left-align">{amount.suffix}</div>
     </div>
   )
 }
