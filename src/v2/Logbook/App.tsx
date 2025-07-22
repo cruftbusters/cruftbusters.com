@@ -51,13 +51,7 @@ export function App() {
     <>
       <p>
         Logbook is a quick bean counter. Each record moves something from one
-        account to another. Try adding this line:
-      </p>
-      <p>
-        <code>my bean factory, my bean lover, 1000 beans</code>
-      </p>
-      <p aria-label="app-status" hidden={status.message === undefined}>
-        {status.message}
+        account to another.
       </p>
       <p>
         <label>
@@ -72,6 +66,13 @@ export function App() {
             ))}
           </select>
         </label>
+      </p>
+      <p>
+        {' Try adding this line: '}
+        <code>my bean factory, my bean lover, 1000 beans</code>
+      </p>
+      <p aria-label="app-status" hidden={status.message === undefined}>
+        {status.message}
       </p>
       <div className="block">
         <textarea
