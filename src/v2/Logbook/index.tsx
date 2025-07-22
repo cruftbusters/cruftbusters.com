@@ -12,8 +12,8 @@ export function Logbook() {
         <Link to="./planning">Planning</Link>
       </nav>
       <Routes>
-        <Route index element={<App />} />
-        <Route path={'planning'} element={<Planning />} />
+        <Route path="*" element={<App />} />
+        <Route path="planning" element={<Planning />} />
       </Routes>
     </div>
   )
