@@ -12,12 +12,12 @@ export function Editor() {
           {' select logbook: '}
           <select
             onChange={(e) =>
-              dispatch({ type: 'setActiveLogbook', name: e.target.value })
+              dispatch({ type: 'setActiveLogbook', id: e.target.value })
             }
-            value={state.activeLogbook}
+            value={state.id}
           >
-            {Object.keys(state.logbooks).map((name) => (
-              <option key={name} value={name}>
+            {Object.values(state.logbooks).map(({ id, name }) => (
+              <option key={id} value={id}>
                 {name}
               </option>
             ))}
@@ -39,7 +39,7 @@ export function Editor() {
       </div>
       <div className="block">
         <h2>Balance</h2>
-        <BalanceSheetView sheet={state.logbook} />
+        <BalanceSheetView sheet={state.logbook.sheet} />
       </div>
     </>
   )

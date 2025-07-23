@@ -21,6 +21,22 @@ nav a {
   text-decoration: line-through;
 }
 
+.browser {
+  display: inline-grid;
+  grid-template-columns: repeat(3, auto);
+  column-gap: 1em;
+}
+
+.browser-header {
+  font-weight: bold;
+}
+
+.browser-row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+}
+
 .editor {
   width: 100%;
   box-sizing: border-box;

@@ -2,42 +2,53 @@ import {
   createContext,
   Dispatch,
   PropsWithChildren,
+  Reducer,
   useContext as useReactContext,
   useReducer,
 } from 'react'
 import { TextSheet } from './TextSheet'
 
-const defaultLogbook = new TextSheet([['credit', 'debit', 'amount']])
-
-const defaultState = {
-  activeLogbook: 'default',
-  logbook: defaultLogbook,
-  logbooks: {
-    default: defaultLogbook,
-    'major accounting categories': new TextSheet([
-      ['credit', 'debit', 'amount'],
-      ['equity:capital contribution', 'expense:office supplies', '$200.00'],
-      ['income:via client', 'liability:income receivable', '$500.00'],
-      ['liability:income receivable', 'assets:checking', '$500.00'],
-      ['liability:credit card', 'expense:government fees', '$135.00'],
-      ['income:checking interest', 'assets:checking', '$1.00'],
-      ['income:via client', 'liability:income receivable', '$500.00'],
-      ['assets:checking', 'expense:income tax', '$100.00'],
-      ['assets:checking', 'expense:net pay', '$300.00'],
-      ['assets:checking', 'equity:draw', '$50.00'],
-    ]),
-    'timekeeping and credit': TextSheet.parse(
-      ` credit,debit,amount
+const defaultState = createDefaultState({
+  default: new TextSheet([['credit', 'debit', 'amount']]),
+  'major accounting categories': new TextSheet([
+    ['credit', 'debit', 'amount'],
+    ['equity:capital contribution', 'expense:office supplies', '$200.00'],
+    ['income:via client', 'liability:income receivable', '$500.00'],
+    ['liability:income receivable', 'assets:checking', '$500.00'],
+    ['liability:credit card', 'expense:government fees', '$135.00'],
+    ['income:checking interest', 'assets:checking', '$1.00'],
+    ['income:via client', 'liability:income receivable', '$500.00'],
+    ['assets:checking', 'expense:income tax', '$100.00'],
+    ['assets:checking', 'expense:net pay', '$300.00'],
+    ['assets:checking', 'equity:draw', '$50.00'],
+  ]),
+  'timekeeping and credit': TextSheet.parse(
+    ` credit,debit,amount
           my hours,income:via client,40.00 h
           income:via client,liability:client receivable,$1000.00
           liability:credit card,expense:mobile phone,$900.00
           expense:mobile phone,assets,1 Google Pixel 9
           liability:client receivable,assets:cash,$1000.00
         `,
-    ),
-  },
-  textParseStatus: '',
-  text: defaultLogbook.toText(),
+  ),
+})
+
+function createDefaultState(defaultEntries: Record<string, TextSheet>) {
+  const defaultIdName = Object.keys(defaultEntries)[0]
+
+  const defaultLogbooks = Object.entries(defaultEntries).reduce(
+    (logbooks, [name, sheet]) =>
+      Object.assign(logbooks, { [name]: { id: name, name, sheet } }),
+    {} as Record<string, Logbook>,
+  )
+
+  return {
+    id: defaultIdName,
+    logbook: defaultLogbooks[defaultIdName],
+    logbooks: defaultLogbooks,
+    textParseStatus: '',
+    text: defaultLogbooks[defaultIdName].sheet.toText(),
+  }
 }
 
 export const context = createContext<[State, Dispatch<Action>]>([
@@ -57,37 +68,43 @@ export function useContext() {
   return useReactContext(context)
 }
 
+export type Logbook = { id: string; name: string; sheet: TextSheet }
+
 type State = {
-  activeLogbook: string
-  logbook: TextSheet
-  logbooks: Record<string, TextSheet>
+  id: string
+  logbook: Logbook
+  logbooks: Record<string, Logbook>
   textParseStatus: string
   text: string
 }
 
 type Action =
-  | { type: 'setActiveLogbook'; name: string }
+  | { type: 'setActiveLogbook'; id: string }
   | { type: 'setText'; text: string }
+  | { type: 'rename'; id: string; name: string }
 
-const reducer = (state: State, action: Action) => {
+const reducer: Reducer<State, Action> = (state: State, action: Action) => {
   switch (action.type) {
     case 'setActiveLogbook':
-      const logbook = state.logbooks[action.name]
+      const logbook = state.logbooks[action.id]
 
       return {
         ...state,
-        activeLogbook: action.name,
+        id: action.id,
         logbook,
-        text: logbook.toText(),
+        text: logbook.sheet.toText(),
       }
     case 'setText':
       try {
-        const logbook = TextSheet.parse(action.text)
+        const logbook = {
+          ...state.logbook,
+          sheet: TextSheet.parse(action.text),
+        }
 
         return {
           ...state,
           logbook,
-          logbooks: { ...state.logbooks, [state.activeLogbook]: logbook },
+          logbooks: { ...state.logbooks, [state.id]: logbook },
           parseStatus: '',
           text: action.text,
         }
@@ -102,5 +119,16 @@ const reducer = (state: State, action: Action) => {
           text: action.text,
         }
       }
+    case 'rename': {
+      const logbook = state.logbooks[action.id]
+
+      return {
+        ...state,
+        logbooks: {
+          ...state.logbooks,
+          [action.id]: { ...logbook, name: action.name },
+        },
+      }
+    }
   }
 }
