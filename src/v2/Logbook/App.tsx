@@ -1,54 +1,23 @@
-import { BalanceSheetView } from './BalanceSheetView'
-import { useContext, ContextProvider } from './context'
+import { Route, Routes } from 'react-router-dom'
+import { ContextProvider } from './context'
+import { Editor } from './Editor'
+import { Planning } from './Planning'
+import { Landing } from './Landing'
+import { NavLink } from './NavLink'
 
 export function App() {
   return (
     <ContextProvider>
-      <p>
-        Logbook is a quick bean counter. Each record moves something from one
-        account to another.
-      </p>
-      <Editor />
+      <nav className="block-start">
+        <NavLink to=".">Logbook</NavLink>
+        <NavLink to="editor">Editor</NavLink>
+        <NavLink to="planning">Planning</NavLink>
+      </nav>
+      <Routes>
+        <Route index element={<Landing />} />
+        <Route path="editor" element={<Editor />} />
+        <Route path="planning" element={<Planning />} />
+      </Routes>
     </ContextProvider>
-  )
-}
-
-function Editor() {
-  const [state, dispatch] = useContext()
-
-  return (
-    <>
-      <p hidden={state.textParseStatus === ''}>{state.textParseStatus}</p>
-      <p>
-        <label>
-          {' select logbook: '}
-          <select
-            onChange={(e) =>
-              dispatch({ type: 'setActiveLogbook', name: e.target.value })
-            }
-          >
-            {Object.keys(state.logbooks).map((key) => (
-              <option key={key}>{key}</option>
-            ))}
-          </select>
-        </label>
-      </p>
-      <p>
-        {' Try adding this line: '}
-        <code>my bean factory, my bean lover, 1000 beans</code>
-      </p>
-      <div className="block">
-        <textarea
-          aria-label="transfers"
-          onChange={(e) => dispatch({ type: 'setText', text: e.target.value })}
-          rows={8}
-          className="editor"
-          value={state.text}
-        />
-      </div>
-      <div className="block">
-        <BalanceSheetView logbook={state.logbook} />
-      </div>
-    </>
   )
 }

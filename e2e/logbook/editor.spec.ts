@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test'
-import { TextSheet } from '../src/v2/Logbook/TextSheet'
+import { TextSheet } from '../../src/v2/Logbook/TextSheet'
 
 test('missing headers error', async ({ page }) => {
-  await page.goto('http://localhost:5173/apps/logbook')
+  await page.goto('http://localhost:5173/apps/logbook/editor')
 
   const sheet = new TextSheet([
     ['credit', 'debitt', 'amount'],
@@ -19,7 +19,7 @@ test('missing headers error', async ({ page }) => {
 })
 
 test('single transfer and summary', async ({ page }) => {
-  await page.goto('http://localhost:5173/apps/logbook')
+  await page.goto('http://localhost:5173/apps/logbook/editor')
 
   const sheet = new TextSheet([
     ['credit', 'debit', 'amount'],
@@ -40,7 +40,7 @@ test('single transfer and summary', async ({ page }) => {
 })
 
 test('multiple transfers and summary', async ({ page }) => {
-  await page.goto('http://localhost:5173/apps/logbook')
+  await page.goto('http://localhost:5173/apps/logbook/editor')
 
   const sheet = new TextSheet([
     ['credit', 'debit', 'amount'],
@@ -62,7 +62,7 @@ test('multiple transfers and summary', async ({ page }) => {
 })
 
 test('load an example for major accounting categories', async ({ page }) => {
-  await page.goto('http://localhost:5173/apps/logbook')
+  await page.goto('http://localhost:5173/apps/logbook/editor')
 
   await page.getByLabel('logbook:').selectOption('major accounting categories')
 

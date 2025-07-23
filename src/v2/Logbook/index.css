@@ -9,6 +9,14 @@ nav a {
   text-decoration: none;
 }
 
+.text-active {
+  color: tomato;
+}
+
+.text-inactive {
+  color: orchid;
+}
+
 .strike {
   text-decoration: line-through;
 }
